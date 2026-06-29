@@ -4,19 +4,14 @@ import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/AuthContext';
 import { UserRole, ROLE_LABELS } from '@/types';
-import { Eye, EyeOff, ChevronDown } from 'lucide-react';
+import { Eye, EyeOff, ChevronDown, Check } from 'lucide-react';
 
 const ROLES: { role: UserRole; desc: string }[] = [
-  { role: 'director', desc: 'Полный доступ ко всей системе' },
-  { role: 'commercial_director', desc: 'Продажи, клиенты, цены' },
-  { role: 'accountant', desc: 'Финансы, зарплаты, отчеты' },
-  { role: 'hr', desc: 'Кадры, доступы, администрирование' },
+  { role: 'director', desc: 'Полный доступ — контроль всей компании' },
+  { role: 'commercial_director', desc: 'Продажи, клиенты, цены, планы' },
+  { role: 'accountant', desc: 'Финансы, зарплаты, налоги, отчёты' },
+  { role: 'hr', desc: 'Кадры, доступы, настройки системы' },
   { role: 'quarry_manager', desc: 'Карьер, логистика, склад, охрана' },
-  { role: 'dispatcher', desc: 'Назначение машин и рейсов' },
-  { role: 'logistician', desc: 'Контроль доставки и GPS' },
-  { role: 'weigher', desc: 'Весовая, накладные' },
-  { role: 'warehouse_keeper', desc: 'Остатки, движение товаров' },
-  { role: 'security', desc: 'Вход/выход, камеры, пропуска' },
 ];
 
 export default function LoginPage() {
@@ -31,7 +26,7 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    await new Promise(r => setTimeout(r, 600));
+    await new Promise(r => setTimeout(r, 500));
     login(selectedRole);
     router.push('/dashboard');
   };
@@ -39,70 +34,53 @@ export default function LoginPage() {
   const roleInfo = ROLES.find(r => r.role === selectedRole)!;
 
   return (
-    <div className="min-h-screen bg-slate-950 flex items-center justify-center p-4">
-      {/* Background decoration */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/5 rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 rounded-full blur-3xl" />
-      </div>
-
-      <div className="w-full max-w-md relative">
-        {/* Logo */}
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center gap-3 mb-4">
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center shadow-lg shadow-cyan-500/25">
-              <span className="text-white font-bold text-xl">V</span>
-            </div>
-            <div className="text-left">
-              <p className="text-white font-bold text-xl leading-tight">VERTEX ERP</p>
-              <p className="text-slate-400 text-sm">Система управления компанией</p>
-            </div>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-blue-700 mb-4 shadow">
+            <span className="text-white font-bold text-lg">V</span>
           </div>
-          <p className="text-slate-400 text-sm">ERP · CRM · WMS · HRM</p>
+          <h1 className="text-gray-900 font-bold text-2xl">VERTEX ERP</h1>
+          <p className="text-gray-500 text-sm mt-1">Система управления компанией</p>
         </div>
 
         {/* Card */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-2xl">
-          <h2 className="text-white font-semibold text-xl mb-1">Вход в систему</h2>
-          <p className="text-slate-400 text-sm mb-7">Выберите роль и войдите в аккаунт</p>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-md p-6">
+          <h2 className="text-gray-800 font-semibold text-lg mb-1">Вход в систему</h2>
+          <p className="text-gray-400 text-sm mb-5">Выберите вашу роль и введите пароль</p>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            {/* Role selector */}
+          <form onSubmit={handleLogin} className="space-y-4">
+            {/* Role */}
             <div>
-              <label className="block text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">
-                Роль
-              </label>
+              <label className="block text-gray-600 text-sm font-medium mb-1.5">Роль</label>
               <div className="relative">
                 <button
                   type="button"
                   onClick={() => setShowRoles(!showRoles)}
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-left flex items-center justify-between hover:border-slate-600 transition-colors focus:outline-none focus:border-cyan-500/50"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-left flex items-center justify-between hover:border-blue-400 focus:outline-none focus:border-blue-500 transition-colors"
                 >
                   <div>
-                    <p className="text-white text-sm font-medium">{ROLE_LABELS[selectedRole]}</p>
-                    <p className="text-slate-500 text-xs">{roleInfo.desc}</p>
+                    <p className="text-gray-800 text-sm font-medium">{ROLE_LABELS[selectedRole]}</p>
+                    <p className="text-gray-400 text-xs">{roleInfo.desc}</p>
                   </div>
-                  <ChevronDown size={16} className={`text-slate-400 transition-transform ${showRoles ? 'rotate-180' : ''}`} />
+                  <ChevronDown size={15} className={`text-gray-400 transition-transform flex-shrink-0 ml-2 ${showRoles ? 'rotate-180' : ''}`} />
                 </button>
 
                 {showRoles && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-slate-800 border border-slate-700 rounded-xl overflow-hidden z-50 shadow-xl max-h-72 overflow-y-auto">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg overflow-hidden z-50 shadow-lg">
                     {ROLES.map(({ role, desc }) => (
                       <button
                         key={role}
                         type="button"
                         onClick={() => { setSelectedRole(role); setShowRoles(false); }}
-                        className={`w-full px-4 py-3 text-left hover:bg-slate-700 transition-colors flex items-center gap-3 ${
-                          selectedRole === role ? 'bg-slate-700/50' : ''
-                        }`}
+                        className={`w-full px-3 py-2.5 text-left hover:bg-blue-50 transition-colors flex items-center gap-2 ${selectedRole === role ? 'bg-blue-50' : ''}`}
                       >
-                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${
-                          selectedRole === role ? 'bg-cyan-400' : 'bg-slate-600'
-                        }`} />
-                        <div>
-                          <p className="text-white text-sm">{ROLE_LABELS[role]}</p>
-                          <p className="text-slate-500 text-xs">{desc}</p>
+                        <div className="flex-1">
+                          <p className="text-gray-800 text-sm font-medium">{ROLE_LABELS[role]}</p>
+                          <p className="text-gray-400 text-xs">{desc}</p>
                         </div>
+                        {selectedRole === role && <Check size={14} className="text-blue-600 flex-shrink-0" />}
                       </button>
                     ))}
                   </div>
@@ -112,35 +90,31 @@ export default function LoginPage() {
 
             {/* Login */}
             <div>
-              <label className="block text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">
-                Логин
-              </label>
+              <label className="block text-gray-600 text-sm font-medium mb-1.5">Логин</label>
               <input
                 type="text"
                 defaultValue="admin"
-                className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-colors"
+                className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">
-                Пароль
-              </label>
+              <label className="block text-gray-600 text-sm font-medium mb-1.5">Пароль</label>
               <div className="relative">
                 <input
                   type={showPass ? 'text' : 'password'}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-slate-800 border border-slate-700 rounded-xl px-4 py-3 pr-11 text-white text-sm placeholder-slate-500 focus:outline-none focus:border-cyan-500/50 focus:bg-slate-700/50 transition-colors"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 pr-10 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-300 transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
                 >
-                  {showPass ? <EyeOff size={16} /> : <Eye size={16} />}
+                  {showPass ? <EyeOff size={15} /> : <Eye size={15} />}
                 </button>
               </div>
             </div>
@@ -148,15 +122,13 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-all shadow-lg shadow-cyan-500/20 hover:shadow-cyan-500/30 mt-2"
+              className="w-full bg-blue-700 hover:bg-blue-800 disabled:opacity-60 text-white font-semibold py-2.5 rounded-lg transition-colors shadow-sm mt-1"
             >
-              {loading ? 'Вход...' : 'Войти в систему'}
+              {loading ? 'Вход...' : 'Войти'}
             </button>
           </form>
 
-          <p className="text-center text-slate-600 text-xs mt-6">
-            Демо-режим: любой пароль подойдет
-          </p>
+          <p className="text-center text-gray-400 text-xs mt-4">Демо-режим: любой пароль</p>
         </div>
       </div>
     </div>

@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, UserRole, ROLE_LABELS } from '@/types';
+import { User, UserRole } from '@/types';
 
 interface AuthContextType {
   user: User | null;
@@ -18,11 +18,6 @@ const MOCK_USERS: Record<UserRole, User> = {
   accountant: { id: '3', name: 'Нурия Жакупова', role: 'accountant' },
   hr: { id: '4', name: 'Дамир Сейтов', role: 'hr' },
   quarry_manager: { id: '5', name: 'Болат Ержанов', role: 'quarry_manager' },
-  dispatcher: { id: '6', name: 'Рустам Ахметов', role: 'dispatcher' },
-  logistician: { id: '7', name: 'Сания Бекова', role: 'logistician' },
-  weigher: { id: '8', name: 'Марат Дюсупов', role: 'weigher' },
-  warehouse_keeper: { id: '9', name: 'Алия Нурланова', role: 'warehouse_keeper' },
-  security: { id: '10', name: 'Серик Байжанов', role: 'security' },
 };
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -32,9 +27,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const stored = localStorage.getItem('vertex_user');
     if (stored) {
-      try {
-        setUser(JSON.parse(stored));
-      } catch {}
+      try { setUser(JSON.parse(stored)); } catch {}
     }
     setIsLoading(false);
   }, []);

@@ -3,18 +3,12 @@ export type UserRole =
   | 'commercial_director'
   | 'accountant'
   | 'hr'
-  | 'quarry_manager'
-  | 'dispatcher'
-  | 'logistician'
-  | 'weigher'
-  | 'warehouse_keeper'
-  | 'security';
+  | 'quarry_manager';
 
 export interface User {
   id: string;
   name: string;
   role: UserRole;
-  avatar?: string;
 }
 
 export const ROLE_LABELS: Record<UserRole, string> = {
@@ -23,25 +17,4 @@ export const ROLE_LABELS: Record<UserRole, string> = {
   accountant: 'Бухгалтер',
   hr: 'HR',
   quarry_manager: 'Начальник карьера',
-  dispatcher: 'Диспетчер',
-  logistician: 'Логист',
-  weigher: 'Весовщик',
-  warehouse_keeper: 'Кладовщик',
-  security: 'Охрана',
 };
-
-export interface NavItem {
-  label: string;
-  href: string;
-  icon: string;
-  children?: NavItem[];
-  roles?: UserRole[];
-}
-
-export interface StatCard {
-  label: string;
-  value: string | number;
-  change?: string;
-  positive?: boolean;
-  icon?: string;
-}

@@ -1,7 +1,7 @@
 'use client';
 
 import AppLayout from '@/components/layout/AppLayout';
-import { FileText, Download, Eye, Plus, Search } from 'lucide-react';
+import { Download, Eye, Plus, Search } from 'lucide-react';
 
 const DOCUMENTS = [
   { id: 'СЧТ-2847', type: 'Счет', client: 'ТОО "АлтайСтрой"', amount: 480000, date: '29.06.2026', status: 'paid', ext: 'PDF' },
@@ -15,49 +15,49 @@ const DOCUMENTS = [
 ];
 
 const TYPE_STYLE: Record<string, string> = {
-  'Счет': 'text-blue-400 bg-blue-400/10',
-  'Акт': 'text-green-400 bg-green-400/10',
-  'Накладная': 'text-cyan-400 bg-cyan-400/10',
-  'Договор': 'text-purple-400 bg-purple-400/10',
-  'Налог. отчет': 'text-yellow-400 bg-yellow-400/10',
+  'Счет': 'text-blue-700 bg-blue-50 border-blue-200',
+  'Акт': 'text-green-700 bg-green-50 border-green-200',
+  'Накладная': 'text-cyan-700 bg-cyan-50 border-cyan-200',
+  'Договор': 'text-purple-700 bg-purple-50 border-purple-200',
+  'Налог. отчет': 'text-amber-700 bg-amber-50 border-amber-200',
 };
 
 const STATUS_LABEL: Record<string, { label: string; style: string }> = {
-  paid: { label: 'Оплачен', style: 'text-green-400 bg-green-400/10' },
-  signed: { label: 'Подписан', style: 'text-green-400 bg-green-400/10' },
-  issued: { label: 'Выдан', style: 'text-cyan-400 bg-cyan-400/10' },
-  pending: { label: 'Ожидает', style: 'text-yellow-400 bg-yellow-400/10' },
-  active: { label: 'Активен', style: 'text-blue-400 bg-blue-400/10' },
-  submitted: { label: 'Сдан', style: 'text-purple-400 bg-purple-400/10' },
+  paid:      { label: 'Оплачен',  style: 'text-green-700 bg-green-50 border-green-200' },
+  signed:    { label: 'Подписан', style: 'text-green-700 bg-green-50 border-green-200' },
+  issued:    { label: 'Выдан',    style: 'text-blue-700 bg-blue-50 border-blue-200' },
+  pending:   { label: 'Ожидает',  style: 'text-amber-700 bg-amber-50 border-amber-200' },
+  active:    { label: 'Активен',  style: 'text-indigo-700 bg-indigo-50 border-indigo-200' },
+  submitted: { label: 'Сдан',     style: 'text-purple-700 bg-purple-50 border-purple-200' },
 };
 
 export default function DocumentsPage() {
   return (
     <AppLayout title="Документы" subtitle="Счета, акты, договоры и накладные">
-      <div className="grid grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-4 gap-4 mb-5">
         {['Счет', 'Акт', 'Договор', 'Накладная'].map((type, i) => (
-          <div key={i} className="bg-slate-900 border border-slate-800 rounded-xl p-4 text-center hover:border-slate-600 transition-colors cursor-pointer">
-            <div className={`text-2xl font-bold mb-1 ${['text-blue-400','text-green-400','text-purple-400','text-cyan-400'][i]}`}>
+          <div key={i} className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 text-center hover:border-gray-300 transition-colors cursor-pointer">
+            <div className={`text-2xl font-bold mb-1 ${['text-blue-600','text-green-600','text-purple-600','text-cyan-600'][i]}`}>
               {DOCUMENTS.filter(d => d.type === type).length}
             </div>
-            <p className="text-slate-400 text-xs">{type}ов</p>
+            <p className="text-gray-500 text-xs">{type}ов</p>
           </div>
         ))}
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-semibold">Все документы</h3>
+          <h3 className="text-gray-700 font-semibold">Все документы</h3>
           <div className="flex gap-2">
             <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+              <Search size={13} className="absolute left-2.5 top-1/2 -translate-y-1/2 text-gray-400" />
               <input
                 type="text"
                 placeholder="Поиск..."
-                className="bg-slate-800 border border-slate-700 rounded-lg pl-8 pr-3 py-1.5 text-sm text-slate-300 placeholder-slate-500 w-40 focus:outline-none focus:border-cyan-500/50 transition-colors"
+                className="border border-gray-200 rounded-lg pl-8 pr-3 py-1.5 text-sm text-gray-700 placeholder-gray-400 w-40 focus:outline-none focus:border-blue-400 transition-colors"
               />
             </div>
-            <button className="text-xs px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 transition-colors flex items-center gap-1.5">
+            <button className="text-xs px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-1">
               <Plus size={12} /> Создать
             </button>
           </div>
@@ -66,43 +66,43 @@ export default function DocumentsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-slate-500 text-xs uppercase tracking-wider">
-                <th className="text-left py-2 pb-3 font-medium">Номер</th>
-                <th className="text-left py-2 pb-3 font-medium">Тип</th>
-                <th className="text-left py-2 pb-3 font-medium">Контрагент</th>
-                <th className="text-right py-2 pb-3 font-medium">Сумма</th>
-                <th className="text-left py-2 pb-3 font-medium">Дата</th>
-                <th className="text-center py-2 pb-3 font-medium">Статус</th>
-                <th className="text-center py-2 pb-3 font-medium">Формат</th>
-                <th className="text-center py-2 pb-3 font-medium">Действия</th>
+              <tr className="text-gray-400 text-xs uppercase tracking-wide border-b border-gray-100">
+                <th className="text-left pb-2 font-medium">Номер</th>
+                <th className="text-left pb-2 font-medium">Тип</th>
+                <th className="text-left pb-2 font-medium">Контрагент</th>
+                <th className="text-right pb-2 font-medium">Сумма</th>
+                <th className="text-left pb-2 font-medium">Дата</th>
+                <th className="text-center pb-2 font-medium">Статус</th>
+                <th className="text-center pb-2 font-medium">Формат</th>
+                <th className="text-center pb-2 font-medium">Действия</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-gray-50">
               {DOCUMENTS.map((d, i) => (
-                <tr key={i} className="hover:bg-slate-800/30 transition-colors group">
-                  <td className="py-3 text-slate-400 font-mono text-xs">{d.id}</td>
-                  <td className="py-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${TYPE_STYLE[d.type] || 'text-slate-400 bg-slate-400/10'}`}>{d.type}</span>
+                <tr key={i} className="hover:bg-gray-50 transition-colors group">
+                  <td className="py-2.5 text-gray-400 font-mono text-xs">{d.id}</td>
+                  <td className="py-2.5">
+                    <span className={`text-xs px-1.5 py-0.5 rounded border ${TYPE_STYLE[d.type] || 'text-gray-600 bg-gray-50 border-gray-200'}`}>{d.type}</span>
                   </td>
-                  <td className="py-3 text-white">{d.client || '—'}</td>
-                  <td className="py-3 text-right text-white font-medium">
-                    {d.amount ? `${d.amount.toLocaleString('ru-RU')} ₸` : '—'}
+                  <td className="py-2.5 text-gray-800 font-medium">{d.client || '—'}</td>
+                  <td className="py-2.5 text-right text-gray-800 font-medium">
+                    {d.amount ? `${d.amount.toLocaleString('ru-RU')} сом` : '—'}
                   </td>
-                  <td className="py-3 text-slate-500 text-xs">{d.date}</td>
-                  <td className="py-3 text-center">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_LABEL[d.status]?.style}`}>
+                  <td className="py-2.5 text-gray-400 text-xs">{d.date}</td>
+                  <td className="py-2.5 text-center">
+                    <span className={`text-xs px-1.5 py-0.5 rounded border ${STATUS_LABEL[d.status]?.style}`}>
                       {STATUS_LABEL[d.status]?.label}
                     </span>
                   </td>
-                  <td className="py-3 text-center">
-                    <span className="text-xs px-1.5 py-0.5 rounded bg-slate-700 text-slate-400 font-mono">{d.ext}</span>
+                  <td className="py-2.5 text-center">
+                    <span className="text-xs px-1.5 py-0.5 rounded border border-gray-200 text-gray-500 font-mono bg-gray-50">{d.ext}</span>
                   </td>
-                  <td className="py-3 text-center">
+                  <td className="py-2.5 text-center">
                     <div className="flex items-center justify-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                      <button className="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white transition-colors">
+                      <button className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
                         <Eye size={13} />
                       </button>
-                      <button className="p-1 rounded hover:bg-slate-700 text-slate-400 hover:text-white transition-colors">
+                      <button className="p-1 rounded hover:bg-gray-100 text-gray-400 hover:text-gray-600 transition-colors">
                         <Download size={13} />
                       </button>
                     </div>

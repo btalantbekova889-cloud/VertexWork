@@ -10,14 +10,10 @@ export const metadata: Metadata = {
   description: "Единый корпоративный портал управления компанией",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="ru" className="h-full">
-      <body className={`${inter.className} h-full bg-slate-950 text-white antialiased`}>
+      <body className={`${inter.className} h-full bg-gray-100 text-gray-900 antialiased`}>
         <AuthProvider>{children}</AuthProvider>
       </body>
     </html>

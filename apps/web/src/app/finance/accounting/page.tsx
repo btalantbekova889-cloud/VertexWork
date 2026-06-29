@@ -15,60 +15,53 @@ const TRANSACTIONS = [
 
 export default function AccountingPage() {
   return (
-    <AppLayout title="Бухгалтерия" subtitle="Учет доходов и расходов">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Баланс банк" value="23 450 000 ₸" icon={<CreditCard size={18} />} color="cyan" />
-        <StatCard label="Баланс касса" value="1 240 000 ₸" icon={<Wallet size={18} />} color="green" />
-        <StatCard label="Приход сегодня" value="4 820 000 ₸" change="+12%" positive icon={<ArrowDownLeft size={18} />} color="blue" />
-        <StatCard label="Расход сегодня" value="1 355 000 ₸" icon={<ArrowUpRight size={18} />} color="red" />
+    <AppLayout title="Бухгалтерия" subtitle="Учёт доходов и расходов">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        <StatCard label="Баланс (банк)" value="23 450 000 сом" icon={<CreditCard size={16} />} color="blue" />
+        <StatCard label="Баланс (касса)" value="1 240 000 сом" icon={<Wallet size={16} />} color="green" />
+        <StatCard label="Приход сегодня" value="4 820 000 сом" change="+12%" positive icon={<ArrowDownLeft size={16} />} color="indigo" />
+        <StatCard label="Расход сегодня" value="1 355 000 сом" icon={<ArrowUpRight size={16} />} color="red" />
       </div>
 
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-semibold">Операции</h3>
+          <h3 className="text-gray-700 font-semibold">Операции</h3>
           <div className="flex gap-2">
-            <button className="text-xs px-3 py-1.5 rounded-lg bg-slate-800 border border-slate-700 text-slate-300 hover:text-white hover:border-slate-600 transition-colors">Все</button>
-            <button className="text-xs px-3 py-1.5 rounded-lg bg-green-500/10 border border-green-500/30 text-green-400">Приход</button>
-            <button className="text-xs px-3 py-1.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400">Расход</button>
+            {['Все', 'Приход', 'Расход'].map(t => (
+              <button key={t} className={`text-xs px-2.5 py-1 rounded border transition-colors ${t === 'Все' ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-gray-600 border-gray-200 hover:border-gray-300'}`}>{t}</button>
+            ))}
           </div>
         </div>
-
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-slate-500 text-xs uppercase tracking-wider">
-                <th className="text-left py-2 pb-3 font-medium">№</th>
-                <th className="text-left py-2 pb-3 font-medium">Тип</th>
-                <th className="text-left py-2 pb-3 font-medium">Контрагент</th>
-                <th className="text-left py-2 pb-3 font-medium">Описание</th>
-                <th className="text-left py-2 pb-3 font-medium">Метод</th>
-                <th className="text-left py-2 pb-3 font-medium">Дата</th>
-                <th className="text-right py-2 pb-3 font-medium">Сумма</th>
+              <tr className="text-gray-400 text-xs uppercase tracking-wide border-b border-gray-100">
+                <th className="text-left pb-2 font-medium">№</th>
+                <th className="text-left pb-2 font-medium">Тип</th>
+                <th className="text-left pb-2 font-medium">Контрагент</th>
+                <th className="text-left pb-2 font-medium">Описание</th>
+                <th className="text-left pb-2 font-medium">Метод</th>
+                <th className="text-left pb-2 font-medium">Дата</th>
+                <th className="text-right pb-2 font-medium">Сумма</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-gray-50">
               {TRANSACTIONS.map(t => (
-                <tr key={t.id} className="hover:bg-slate-800/30 transition-colors">
-                  <td className="py-3 text-slate-400 font-mono text-xs">{t.id}</td>
-                  <td className="py-3">
-                    {t.type === 'income' ? (
-                      <span className="flex items-center gap-1 text-green-400 text-xs">
-                        <ArrowDownLeft size={12} /> Приход
-                      </span>
-                    ) : (
-                      <span className="flex items-center gap-1 text-red-400 text-xs">
-                        <ArrowUpRight size={12} /> Расход
-                      </span>
-                    )}
+                <tr key={t.id} className="hover:bg-gray-50 transition-colors">
+                  <td className="py-2.5 text-gray-400 font-mono text-xs">{t.id}</td>
+                  <td className="py-2.5">
+                    {t.type === 'income'
+                      ? <span className="flex items-center gap-1 text-green-600 text-xs"><ArrowDownLeft size={11} />Приход</span>
+                      : <span className="flex items-center gap-1 text-red-600 text-xs"><ArrowUpRight size={11} />Расход</span>}
                   </td>
-                  <td className="py-3 text-white font-medium">{t.client}</td>
-                  <td className="py-3 text-slate-400">{t.desc}</td>
-                  <td className="py-3">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${t.method === 'Банк' ? 'bg-blue-500/10 text-blue-400' : 'bg-yellow-500/10 text-yellow-400'}`}>{t.method}</span>
+                  <td className="py-2.5 text-gray-800 font-medium">{t.client}</td>
+                  <td className="py-2.5 text-gray-500 text-xs">{t.desc}</td>
+                  <td className="py-2.5">
+                    <span className={`text-xs px-1.5 py-0.5 rounded border ${t.method === 'Банк' ? 'text-blue-700 bg-blue-50 border-blue-200' : 'text-amber-700 bg-amber-50 border-amber-200'}`}>{t.method}</span>
                   </td>
-                  <td className="py-3 text-slate-400 text-xs">{t.date}</td>
-                  <td className={`py-3 text-right font-semibold ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
-                    {t.type === 'income' ? '+' : '-'}{t.amount.toLocaleString('ru-RU')} ₸
+                  <td className="py-2.5 text-gray-400 text-xs">{t.date}</td>
+                  <td className={`py-2.5 text-right font-semibold ${t.type === 'income' ? 'text-green-600' : 'text-red-600'}`}>
+                    {t.type === 'income' ? '+' : '−'}{t.amount.toLocaleString('ru-RU')} сом
                   </td>
                 </tr>
               ))}

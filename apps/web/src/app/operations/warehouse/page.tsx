@@ -25,60 +25,60 @@ export default function WarehousePage() {
 
   return (
     <AppLayout title="Склад" subtitle="Остатки и движение материалов">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Позиций на складе" value={STOCK.length} icon={<Package size={18} />} color="cyan" />
-        <StatCard label="Приход сегодня" value="6 360 т+л" icon={<ArrowDownLeft size={18} />} color="green" />
-        <StatCard label="Расход сегодня" value="3 244 т+л" icon={<ArrowUpRight size={18} />} color="blue" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        <StatCard label="Позиций на складе" value={STOCK.length} icon={<Package size={16} />} color="blue" />
+        <StatCard label="Приход сегодня" value="6 360 т+л" icon={<ArrowDownLeft size={16} />} color="green" />
+        <StatCard label="Расход сегодня" value="3 244 т+л" icon={<ArrowUpRight size={16} />} color="indigo" />
         {lowStock.length > 0 ? (
-          <StatCard label="Низкий остаток" value={lowStock.length} icon={<AlertTriangle size={18} />} color="red" />
+          <StatCard label="Низкий остаток" value={lowStock.length} icon={<AlertTriangle size={16} />} color="red" />
         ) : (
           <StatCard label="Критических остатков" value="0" color="green" />
         )}
       </div>
 
       {lowStock.length > 0 && (
-        <div className="bg-red-500/5 border border-red-500/20 rounded-xl p-4 mb-4 flex items-center gap-3">
-          <AlertTriangle size={18} className="text-red-400 flex-shrink-0" />
+        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4 flex items-center gap-3">
+          <AlertTriangle size={16} className="text-red-500 flex-shrink-0" />
           <div>
-            <p className="text-red-400 font-medium text-sm">Низкий уровень запасов</p>
-            <p className="text-slate-400 text-xs">{lowStock.map(s => s.material).join(', ')} — необходимо пополнение</p>
+            <p className="text-red-700 font-medium text-sm">Низкий уровень запасов</p>
+            <p className="text-red-500 text-xs">{lowStock.map(s => s.material).join(', ')} — необходимо пополнение</p>
           </div>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-xl p-5">
-          <h3 className="text-white font-semibold mb-4 flex items-center gap-2">
-            <Warehouse size={16} className="text-cyan-400" /> Остатки на складе
+        <div className="lg:col-span-2 bg-white rounded-lg border border-gray-200 shadow-sm p-4">
+          <h3 className="text-gray-700 font-semibold mb-4 flex items-center gap-2">
+            <Warehouse size={15} className="text-blue-600" /> Остатки на складе
           </h3>
           <div className="space-y-3">
             {STOCK.map((s, i) => {
               const pct = Math.min((s.balance / (s.min * 3)) * 100, 100);
               const isLow = s.balance < s.min * 1.2;
               return (
-                <div key={i} className="p-3 rounded-lg bg-slate-800/50">
+                <div key={i} className="p-3 rounded-lg border border-gray-100 bg-gray-50">
                   <div className="flex items-center justify-between mb-2">
                     <div>
-                      <p className="text-white text-sm font-medium">{s.material}</p>
-                      <p className="text-slate-500 text-xs">{s.location}</p>
+                      <p className="text-gray-800 text-sm font-medium">{s.material}</p>
+                      <p className="text-gray-400 text-xs">{s.location}</p>
                     </div>
                     <div className="text-right">
-                      <p className={`text-sm font-bold ${isLow ? 'text-red-400' : 'text-white'}`}>
+                      <p className={`text-sm font-bold ${isLow ? 'text-red-600' : 'text-gray-800'}`}>
                         {s.balance.toLocaleString('ru-RU')} {s.unit}
                       </p>
                       <div className="flex gap-2 text-xs mt-0.5 justify-end">
-                        <span className="text-green-400">+{s.in_today.toLocaleString('ru-RU')}</span>
-                        <span className="text-red-400">-{s.out_today.toLocaleString('ru-RU')}</span>
+                        <span className="text-green-600">+{s.in_today.toLocaleString('ru-RU')}</span>
+                        <span className="text-red-500">-{s.out_today.toLocaleString('ru-RU')}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="h-1.5 bg-slate-700 rounded-full">
+                  <div className="h-1.5 bg-gray-200 rounded-full">
                     <div
-                      className={`h-full rounded-full ${isLow ? 'bg-red-500' : pct > 60 ? 'bg-green-500' : 'bg-yellow-500'}`}
+                      className={`h-full rounded-full ${isLow ? 'bg-red-500' : pct > 60 ? 'bg-green-500' : 'bg-amber-500'}`}
                       style={{ width: `${pct}%` }}
                     />
                   </div>
-                  <div className="flex justify-between text-xs text-slate-600 mt-1">
+                  <div className="flex justify-between text-xs text-gray-400 mt-1">
                     <span>Мин: {s.min.toLocaleString('ru-RU')} {s.unit}</span>
                     <span>{Math.round(pct)}%</span>
                   </div>
@@ -88,25 +88,25 @@ export default function WarehousePage() {
           </div>
         </div>
 
-        <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-          <h3 className="text-white font-semibold mb-4">Движение сегодня</h3>
+        <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
+          <h3 className="text-gray-700 font-semibold mb-4">Движение сегодня</h3>
           <div className="space-y-3">
             {MOVEMENTS.map((m, i) => (
               <div key={i} className="flex gap-3">
                 {m.type === 'in' ? (
-                  <ArrowDownLeft size={16} className="text-green-400 mt-0.5 flex-shrink-0" />
+                  <ArrowDownLeft size={15} className="text-green-500 mt-0.5 flex-shrink-0" />
                 ) : (
-                  <ArrowUpRight size={16} className="text-red-400 mt-0.5 flex-shrink-0" />
+                  <ArrowUpRight size={15} className="text-red-500 mt-0.5 flex-shrink-0" />
                 )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-white text-xs font-medium">{m.material}</p>
-                  <p className="text-slate-400 text-xs">{m.type === 'in' ? `Из: ${m.from}` : `Кому: ${m.to}`}</p>
+                  <p className="text-gray-800 text-xs font-medium">{m.material}</p>
+                  <p className="text-gray-400 text-xs">{m.type === 'in' ? `Из: ${m.from}` : `Кому: ${m.to}`}</p>
                   <div className="flex gap-2 mt-0.5">
-                    <span className={`text-xs font-bold ${m.type === 'in' ? 'text-green-400' : 'text-red-400'}`}>
+                    <span className={`text-xs font-bold ${m.type === 'in' ? 'text-green-600' : 'text-red-500'}`}>
                       {m.type === 'in' ? '+' : '-'}{m.qty.toLocaleString('ru-RU')}
                     </span>
-                    <span className="text-slate-600 text-xs">{m.doc}</span>
-                    <span className="text-slate-600 text-xs">{m.time}</span>
+                    <span className="text-gray-400 text-xs">{m.doc}</span>
+                    <span className="text-gray-400 text-xs">{m.time}</span>
                   </div>
                 </div>
               </div>

@@ -6,35 +6,35 @@ interface StatCardProps {
   change?: string;
   positive?: boolean;
   icon?: React.ReactNode;
-  color?: 'cyan' | 'green' | 'yellow' | 'red' | 'purple' | 'blue';
+  color?: 'blue' | 'green' | 'yellow' | 'red' | 'purple' | 'indigo';
 }
 
 const colorMap = {
-  cyan: 'from-cyan-500/20 to-cyan-600/10 border-cyan-500/20 text-cyan-400',
-  green: 'from-green-500/20 to-green-600/10 border-green-500/20 text-green-400',
-  yellow: 'from-yellow-500/20 to-yellow-600/10 border-yellow-500/20 text-yellow-400',
-  red: 'from-red-500/20 to-red-600/10 border-red-500/20 text-red-400',
-  purple: 'from-purple-500/20 to-purple-600/10 border-purple-500/20 text-purple-400',
-  blue: 'from-blue-500/20 to-blue-600/10 border-blue-500/20 text-blue-400',
+  blue:   { icon: 'bg-blue-50 text-blue-600',   border: 'border-l-blue-500' },
+  green:  { icon: 'bg-green-50 text-green-600',  border: 'border-l-green-500' },
+  yellow: { icon: 'bg-amber-50 text-amber-600',  border: 'border-l-amber-500' },
+  red:    { icon: 'bg-red-50 text-red-600',       border: 'border-l-red-500' },
+  purple: { icon: 'bg-purple-50 text-purple-600', border: 'border-l-purple-500' },
+  indigo: { icon: 'bg-indigo-50 text-indigo-600', border: 'border-l-indigo-500' },
 };
 
-export default function StatCard({ label, value, change, positive, icon, color = 'cyan' }: StatCardProps) {
-  const cls = colorMap[color];
+export default function StatCard({ label, value, change, positive, icon, color = 'blue' }: StatCardProps) {
+  const c = colorMap[color];
   return (
-    <div className={`rounded-xl border bg-gradient-to-br p-5 ${cls}`}>
+    <div className={`bg-white rounded-lg border border-gray-200 border-l-4 ${c.border} p-4 shadow-sm`}>
       <div className="flex items-start justify-between">
-        <div className="flex-1">
-          <p className="text-slate-400 text-xs font-medium uppercase tracking-wider mb-2">{label}</p>
-          <p className="text-white text-2xl font-bold">{value}</p>
+        <div className="flex-1 min-w-0">
+          <p className="text-gray-500 text-xs font-medium uppercase tracking-wide mb-1">{label}</p>
+          <p className="text-gray-900 text-xl font-bold truncate">{value}</p>
           {change && (
-            <div className={`flex items-center gap-1 mt-2 text-xs font-medium ${positive ? 'text-green-400' : 'text-red-400'}`}>
-              {positive ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
+            <div className={`flex items-center gap-1 mt-1.5 text-xs font-medium ${positive ? 'text-green-600' : 'text-red-600'}`}>
+              {positive ? <TrendingUp size={11} /> : <TrendingDown size={11} />}
               <span>{change}</span>
             </div>
           )}
         </div>
         {icon && (
-          <div className={`w-10 h-10 rounded-lg flex items-center justify-center opacity-80 ${cls.split(' ').slice(0,2).join(' ')}`}>
+          <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ml-3 ${c.icon}`}>
             {icon}
           </div>
         )}

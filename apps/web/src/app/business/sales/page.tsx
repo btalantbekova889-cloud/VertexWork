@@ -10,94 +10,92 @@ const ORDERS = [
   { id: 'ОРД-2845', client: 'ТОО "МегаБуд"', manager: 'Касымова А.', material: 'Отсев', volume: 200, price: 1800, status: 'pending', date: '28.06.2026' },
   { id: 'ОРД-2844', client: 'АО "СтройКонсалт"', manager: 'Нурланов Е.', material: 'Щебень фр.40-70', volume: 300, price: 3500, status: 'delivered', date: '28.06.2026' },
   { id: 'ОРД-2843', client: 'ТОО "НурБетон"', manager: 'Касымова А.', material: 'Щебень фр.20-40', volume: 150, price: 4000, status: 'cancelled', date: '27.06.2026' },
-  { id: 'ОРД-2842', client: 'ИП Дюсупов М.', manager: 'Сейтов Д.', material: 'Щебень фр.20-40', volume: 90, price: 4000, status: 'delivered', date: '27.06.2026' },
 ];
 
-const STATUS_STYLE: Record<string, string> = {
-  delivered: 'text-green-400 bg-green-400/10',
-  in_progress: 'text-cyan-400 bg-cyan-400/10',
-  pending: 'text-yellow-400 bg-yellow-400/10',
-  cancelled: 'text-red-400 bg-red-400/10',
+const STATUS_BADGE: Record<string, string> = {
+  delivered:   'text-green-700 bg-green-50 border-green-200',
+  in_progress: 'text-blue-700 bg-blue-50 border-blue-200',
+  pending:     'text-amber-700 bg-amber-50 border-amber-200',
+  cancelled:   'text-red-700 bg-red-50 border-red-200',
+};
+const STATUS_LABEL: Record<string, string> = {
+  delivered: 'Доставлен', in_progress: 'В пути', pending: 'Ожидает', cancelled: 'Отменён',
 };
 
-const STATUS_LABEL: Record<string, string> = {
-  delivered: 'Доставлен', in_progress: 'В пути', pending: 'Ожидает', cancelled: 'Отменен',
-};
+const MANAGERS = [
+  { name: 'Касымова Айгуль', orders: 87, revenue: 34200000, plan: 91 },
+  { name: 'Сейтов Дамир', orders: 63, revenue: 24800000, plan: 82 },
+  { name: 'Нурланов Ерлан', orders: 45, revenue: 18200000, plan: 74 },
+];
 
 export default function SalesPage() {
   return (
     <AppLayout title="Продажи (CRM)" subtitle="Управление заказами и продажами">
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-        <StatCard label="Заказов сегодня" value="23" change="+5" positive icon={<ShoppingCart size={18} />} color="cyan" />
-        <StatCard label="Выручка сегодня" value="4 820 000 ₸" change="+12%" positive icon={<TrendingUp size={18} />} color="green" />
-        <StatCard label="Средний чек" value="209 565 ₸" change="+2%" positive color="blue" />
-        <StatCard label="Звонков сегодня" value="37" icon={<Phone size={18} />} color="purple" />
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+        <StatCard label="Заказов сегодня" value="23" change="+5" positive icon={<ShoppingCart size={16} />} color="blue" />
+        <StatCard label="Выручка сегодня" value="4 820 000 сом" change="+12%" positive icon={<TrendingUp size={16} />} color="green" />
+        <StatCard label="Средний чек" value="209 565 сом" change="+2%" positive color="indigo" />
+        <StatCard label="Звонков сегодня" value="37" icon={<Phone size={16} />} color="purple" />
       </div>
 
-      {/* Manager performance */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5 mb-4">
-        <h3 className="text-white font-semibold mb-4">ТОП Менеджеры — Июнь 2026</h3>
+      {/* Managers */}
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4 mb-4">
+        <h3 className="text-gray-700 font-semibold mb-3">ТОП Менеджеры — Июнь 2026</h3>
         <div className="grid grid-cols-3 gap-3">
-          {[
-            { name: 'Касымова Айгуль', orders: 87, revenue: 34200000, plan: 91 },
-            { name: 'Сейтов Дамир', orders: 63, revenue: 24800000, plan: 82 },
-            { name: 'Нурланов Ерлан', orders: 45, revenue: 18200000, plan: 74 },
-          ].map((m, i) => (
-            <div key={i} className="bg-slate-800/50 rounded-lg p-4">
-              <div className="flex items-center gap-2 mb-3">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center text-xs font-bold text-white">
-                  {i + 1}
+          {MANAGERS.map((m, i) => (
+            <div key={i} className="border border-gray-100 rounded-lg p-3 bg-gray-50">
+              <div className="flex items-center gap-2 mb-2">
+                <div className="w-6 h-6 rounded-full bg-blue-600 flex items-center justify-center text-xs font-bold text-white">{i + 1}</div>
+                <p className="text-gray-800 text-sm font-medium">{m.name}</p>
+              </div>
+              <div className="space-y-1 text-xs text-gray-500">
+                <div className="flex justify-between"><span>Заказов</span><span className="text-gray-700 font-medium">{m.orders}</span></div>
+                <div className="flex justify-between"><span>Выручка</span><span className="text-gray-700 font-medium">{(m.revenue / 1000000).toFixed(1)} млн сом</span></div>
+                <div className="flex justify-between"><span>План</span>
+                  <span className={`font-semibold ${m.plan >= 90 ? 'text-green-600' : m.plan >= 75 ? 'text-amber-600' : 'text-red-600'}`}>{m.plan}%</span>
                 </div>
-                <p className="text-white text-sm font-medium">{m.name}</p>
               </div>
-              <div className="space-y-1 text-xs text-slate-400">
-                <div className="flex justify-between"><span>Заказов</span><span className="text-white font-medium">{m.orders}</span></div>
-                <div className="flex justify-between"><span>Выручка</span><span className="text-white font-medium">{(m.revenue / 1000000).toFixed(1)} млн ₸</span></div>
-                <div className="flex justify-between"><span>Plan</span><span className={m.plan >= 90 ? 'text-green-400 font-medium' : m.plan >= 75 ? 'text-yellow-400 font-medium' : 'text-red-400 font-medium'}>{m.plan}%</span></div>
-              </div>
-              <div className="mt-3 h-1.5 bg-slate-700 rounded-full">
-                <div className={`h-full rounded-full ${m.plan >= 90 ? 'bg-green-500' : m.plan >= 75 ? 'bg-yellow-500' : 'bg-red-500'}`} style={{ width: `${m.plan}%` }} />
+              <div className="mt-2 h-1.5 bg-gray-200 rounded-full">
+                <div className={`h-full rounded-full ${m.plan >= 90 ? 'bg-green-500' : m.plan >= 75 ? 'bg-amber-500' : 'bg-red-500'}`} style={{ width: `${m.plan}%` }} />
               </div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Orders table */}
-      <div className="bg-slate-900 border border-slate-800 rounded-xl p-5">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-white font-semibold">Заказы</h3>
-          <button className="text-xs px-3 py-1.5 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 transition-colors flex items-center gap-1.5">
+      {/* Orders */}
+      <div className="bg-white rounded-lg border border-gray-200 shadow-sm p-4">
+        <div className="flex items-center justify-between mb-3">
+          <h3 className="text-gray-700 font-semibold">Заказы</h3>
+          <button className="text-xs px-3 py-1.5 rounded bg-blue-600 text-white hover:bg-blue-700 transition-colors flex items-center gap-1">
             <Plus size={12} /> Новый заказ
           </button>
         </div>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-slate-500 text-xs uppercase tracking-wider">
-                <th className="text-left py-2 pb-3 font-medium">№ Заказа</th>
-                <th className="text-left py-2 pb-3 font-medium">Клиент</th>
-                <th className="text-left py-2 pb-3 font-medium">Менеджер</th>
-                <th className="text-left py-2 pb-3 font-medium">Материал</th>
-                <th className="text-right py-2 pb-3 font-medium">Объем</th>
-                <th className="text-right py-2 pb-3 font-medium">Сумма</th>
-                <th className="text-center py-2 pb-3 font-medium">Статус</th>
-                <th className="text-left py-2 pb-3 font-medium">Дата</th>
+              <tr className="text-gray-400 text-xs uppercase tracking-wide border-b border-gray-100">
+                <th className="text-left pb-2 font-medium">№</th>
+                <th className="text-left pb-2 font-medium">Клиент</th>
+                <th className="text-left pb-2 font-medium">Менеджер</th>
+                <th className="text-left pb-2 font-medium">Материал</th>
+                <th className="text-right pb-2 font-medium">Объём</th>
+                <th className="text-right pb-2 font-medium">Сумма</th>
+                <th className="text-center pb-2 font-medium">Статус</th>
+                <th className="text-left pb-2 font-medium">Дата</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-800">
+            <tbody className="divide-y divide-gray-50">
               {ORDERS.map(o => (
-                <tr key={o.id} className="hover:bg-slate-800/30 transition-colors cursor-pointer">
-                  <td className="py-3 text-slate-400 font-mono text-xs">{o.id}</td>
-                  <td className="py-3 text-white font-medium">{o.client}</td>
-                  <td className="py-3 text-slate-400 text-xs">{o.manager}</td>
-                  <td className="py-3 text-slate-300 text-xs">{o.material}</td>
-                  <td className="py-3 text-right text-slate-300">{o.volume} т</td>
-                  <td className="py-3 text-right text-white font-semibold">{(o.volume * o.price).toLocaleString('ru-RU')} ₸</td>
-                  <td className="py-3 text-center">
-                    <span className={`text-xs px-2 py-0.5 rounded-full ${STATUS_STYLE[o.status]}`}>{STATUS_LABEL[o.status]}</span>
-                  </td>
-                  <td className="py-3 text-slate-500 text-xs">{o.date}</td>
+                <tr key={o.id} className="hover:bg-gray-50 cursor-pointer">
+                  <td className="py-2.5 text-gray-400 font-mono text-xs">{o.id}</td>
+                  <td className="py-2.5 text-gray-800 font-medium">{o.client}</td>
+                  <td className="py-2.5 text-gray-500 text-xs">{o.manager}</td>
+                  <td className="py-2.5 text-gray-500 text-xs">{o.material}</td>
+                  <td className="py-2.5 text-right text-gray-600 text-xs">{o.volume} т</td>
+                  <td className="py-2.5 text-right text-gray-800 font-semibold text-xs">{(o.volume * o.price).toLocaleString('ru-RU')} сом</td>
+                  <td className="py-2.5 text-center"><span className={`text-xs px-1.5 py-0.5 rounded border ${STATUS_BADGE[o.status]}`}>{STATUS_LABEL[o.status]}</span></td>
+                  <td className="py-2.5 text-gray-400 text-xs">{o.date}</td>
                 </tr>
               ))}
             </tbody>
