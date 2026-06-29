@@ -25,3 +25,20 @@ html, body {
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
 }
+
+@keyframes camera-scan {
+  0%   { top: 8%;  opacity: 0.5; }
+  50%  { top: 82%; opacity: 0.8; }
+  100% { top: 8%;  opacity: 0.5; }
+}
+
+.camera-scan {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(74, 222, 128, 0.85), transparent);
+  animation: camera-scan 3s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 10;
+}

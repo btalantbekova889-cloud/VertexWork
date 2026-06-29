@@ -72,7 +72,7 @@ const NAV: NavItem[] = [
       { label: 'Охрана', href: '/operations/security', icon: <Lock size={14} /> },
     ],
   },
-  { label: 'Камеры', href: '/cameras', icon: <Camera size={16} />, roles: ['director', 'quarry_manager'] },
+  { label: 'Камеры (АРН)', href: '/cameras', icon: <Camera size={16} />, roles: ['director', 'quarry_manager', 'commercial_director'] },
   { label: 'Документы', href: '/documents', icon: <FileText size={16} />, roles: ['director', 'accountant'] },
   { label: 'Аналитика', href: '/analytics', icon: <BarChart3 size={16} />, roles: ['director', 'accountant', 'commercial_director', 'quarry_manager'] },
   { label: 'Настройки', href: '/settings', icon: <Settings size={16} />, roles: ['director', 'hr'] },
