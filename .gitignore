@@ -1,0 +1,28 @@
+## Build
+bin/
+obj/
+out/
+
+## IDE
+.vs/
+*.user
+*.suo
+
+## Environment
+.env
+.env.*
+
+## OS
+Thumbs.db
+.DS_Store
+
+## Node (frontend)
+node_modules/
+.next/
+
+## Logs
+*.log
+
+## Local SQLite dev DB
+vertexwork.dev.db
+vertexwork.dev.db-*

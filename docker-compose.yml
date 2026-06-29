@@ -1,0 +1,43 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: vertexwork-postgres
+    environment:
+      POSTGRES_USER: vertex
+      POSTGRES_PASSWORD: vertex_secret
+      POSTGRES_DB: vertexwork
+    ports:
+      - "5432:5432"
+    volumes:
+      - vertexwork_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U vertex -d vertexwork"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: vertexwork-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - vertexwork_redis:/data
+
+  minio:
+    image: minio/minio:latest
+    container_name: vertexwork-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: vertex
+      MINIO_ROOT_PASSWORD: vertex_secret
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - vertexwork_minio:/data
+
+volumes:
+  vertexwork_pgdata:
+  vertexwork_redis:
+  vertexwork_minio:
