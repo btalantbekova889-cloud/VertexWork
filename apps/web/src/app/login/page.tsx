@@ -2,33 +2,41 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/contexts/AuthContext';
+import { useAuth, ApiError } from '@/contexts/AuthContext';
 import { UserRole, ROLE_LABELS } from '@/types';
 import { Eye, EyeOff, ChevronDown, Check } from 'lucide-react';
 
-const ROLES: { role: UserRole; desc: string }[] = [
-  { role: 'director', desc: 'Полный доступ — контроль всей компании' },
-  { role: 'commercial_director', desc: 'Продажи, клиенты, цены, планы' },
-  { role: 'accountant', desc: 'Финансы, зарплаты, налоги, отчёты' },
-  { role: 'hr', desc: 'Кадры, доступы, настройки системы' },
-  { role: 'quarry_manager', desc: 'Карьер, логистика, склад, охрана' },
+const ROLES: { role: UserRole; desc: string; login: string }[] = [
+  { role: 'director', desc: 'Полный доступ — контроль всей компании', login: 'director' },
+  { role: 'commercial_director', desc: 'Продажи, клиенты, цены, планы', login: 'commercial' },
+  { role: 'accountant', desc: 'Финансы, зарплаты, налоги, отчёты', login: 'accountant' },
+  { role: 'hr', desc: 'Кадры, доступы, настройки системы', login: 'hr' },
+  { role: 'quarry_manager', desc: 'Карьер, логистика, склад, охрана', login: 'quarry' },
 ];
 
 export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
   const [selectedRole, setSelectedRole] = useState<UserRole>('director');
+  const [loginValue, setLoginValue] = useState('director');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
   const [showRoles, setShowRoles] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError('');
     setLoading(true);
-    await new Promise(r => setTimeout(r, 500));
-    login(selectedRole);
-    router.push('/dashboard');
+    try {
+      await login(loginValue, password);
+      router.push('/dashboard');
+    } catch (err) {
+      setError(err instanceof ApiError ? err.message : 'Не удалось войти. Проверьте соединение с сервером.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const roleInfo = ROLES.find(r => r.role === selectedRole)!;
@@ -73,7 +81,11 @@ export default function LoginPage() {
                       <button
                         key={role}
                         type="button"
-                        onClick={() => { setSelectedRole(role); setShowRoles(false); }}
+                        onClick={() => {
+                          setSelectedRole(role);
+                          setLoginValue(ROLES.find(r => r.role === role)!.login);
+                          setShowRoles(false);
+                        }}
                         className={`w-full px-3 py-2.5 text-left hover:bg-blue-50 transition-colors flex items-center gap-2 ${selectedRole === role ? 'bg-blue-50' : ''}`}
                       >
                         <div className="flex-1">
@@ -93,7 +105,8 @@ export default function LoginPage() {
               <label className="block text-gray-600 text-sm font-medium mb-1.5">Логин</label>
               <input
                 type="text"
-                defaultValue="admin"
+                value={loginValue}
+                onChange={e => setLoginValue(e.target.value)}
                 className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
               />
             </div>
@@ -119,6 +132,10 @@ export default function LoginPage() {
               </div>
             </div>
 
+            {error && (
+              <p className="text-red-600 text-xs bg-red-50 border border-red-200 rounded-lg px-3 py-2">{error}</p>
+            )}
+
             <button
               type="submit"
               disabled={loading}
@@ -127,8 +144,6 @@ export default function LoginPage() {
               {loading ? 'Вход...' : 'Войти'}
             </button>
           </form>
-
-          <p className="text-center text-gray-400 text-xs mt-4">Демо-режим: любой пароль</p>
         </div>
       </div>
     </div>

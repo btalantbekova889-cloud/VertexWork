@@ -1,9 +1,41 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
 import StatCard from '@/components/ui/StatCard';
+import { apiFetch } from '@/lib/api';
+import { currentYearMonth, todayYMD } from '@/lib/date';
 import { Pickaxe, Activity, Clock, AlertTriangle, CheckCircle2 } from 'lucide-react';
+
+interface Employee {
+  id: number;
+  fullName: string;
+  position: string;
+}
+
+interface AttendanceRecord {
+  id: number;
+  employeeId: number;
+  workDate: string;
+  entryTime: string | null;
+  exitTime: string | null;
+  source: string;
+}
+
+function hoursWorked(entry: string | null, exit: string | null): number {
+  if (!entry) return 0;
+  const [eh, em] = entry.split(':').map(Number);
+  const start = eh * 60 + em;
+  let end: number;
+  if (exit) {
+    const [xh, xm] = exit.split(':').map(Number);
+    end = xh * 60 + xm;
+  } else {
+    const now = new Date();
+    end = now.getHours() * 60 + now.getMinutes();
+  }
+  return Math.max(0, Math.round(((end - start) / 60) * 10) / 10);
+}
 
 const SHIFTS = [
   { shift: 'Смена 1 (07:00–19:00)', foreman: 'Ержанов Б.', workers: 12, extracted: 620, plan: 700, equipment: 'Экскаватор CAT-349, 3 самосвала' },
@@ -17,19 +49,6 @@ const QUARRY_STATS = [
   { zone: 'Блок Г-15', material: 'Щебень фр.40-70',  status: 'active',      extracted_today: 440, remaining: 67000  },
 ];
 
-const ATTENDANCE = [
-  { name: 'Ержанов Болат',      position: 'Начальник карьера', entry: '07:00', exit: null,    status: 'on_shift', hours: 2.8 },
-  { name: 'Ахметов Рустам',    position: 'Диспетчер',         entry: '07:05', exit: null,    status: 'on_shift', hours: 2.7 },
-  { name: 'Сейтов Марат',      position: 'Весовщик',          entry: '07:15', exit: null,    status: 'on_shift', hours: 2.5 },
-  { name: 'Нурланов Ерлан',    position: 'Водитель',          entry: '07:05', exit: '09:30', status: 'exit',     hours: 2.4 },
-  { name: 'Жаксыбеков Айдан',  position: 'Водитель',          entry: '07:10', exit: '08:50', status: 'exit',     hours: 1.7 },
-  { name: 'Темиров Канат',      position: 'Водитель',          entry: '07:20', exit: null,    status: 'on_shift', hours: 2.4 },
-  { name: 'Карибеков Данияр',  position: 'Водитель',          entry: '07:25', exit: null,    status: 'on_shift', hours: 2.3 },
-  { name: 'Мусаев Азамат',     position: 'Взрывник',          entry: '07:10', exit: null,    status: 'on_shift', hours: 2.6 },
-  { name: 'Байжанов Серик',    position: 'Механик',           entry: '07:00', exit: null,    status: 'on_shift', hours: 2.8 },
-  { name: 'Сатыбалдиев Омар',  position: 'Водитель',          entry: null,    exit: null,    status: 'absent',   hours: 0   },
-];
-
 const STATUS_MAP: Record<string, { label: string; cls: string }> = {
   on_shift: { label: 'На смене',   cls: 'text-green-700 bg-green-50 border-green-200'  },
   exit:     { label: 'Выехал',     cls: 'text-gray-600 bg-gray-50 border-gray-200'     },
@@ -38,7 +57,45 @@ const STATUS_MAP: Record<string, { label: string; cls: string }> = {
 
 export default function QuarryPage() {
   const [tab, setTab] = useState<'extraction' | 'attendance'>('extraction');
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [records, setRecords] = useState<AttendanceRecord[]>([]);
+  const [error, setError] = useState('');
   const totalToday = QUARRY_STATS.reduce((s, q) => s + q.extracted_today, 0);
+
+  const load = useCallback(async () => {
+    try {
+      const { year, month } = currentYearMonth();
+      const [{ employees }, { records }] = await Promise.all([
+        apiFetch<{ employees: Employee[] }>('/api/employees'),
+        apiFetch<{ records: AttendanceRecord[] }>(`/api/attendance?year=${year}&month=${month}`),
+      ]);
+      setEmployees(employees);
+      setRecords(records);
+      setError('');
+    } catch {
+      setError('Не удалось загрузить данные посещаемости.');
+    }
+  }, []);
+
+  useEffect(() => {
+    load();
+    const t = setInterval(load, 15000);
+    return () => clearInterval(t);
+  }, [load]);
+
+  const today = todayYMD();
+  const attendanceToday = employees.map(e => {
+    const rec = records.find(r => r.employeeId === e.id && r.workDate.slice(0, 10) === today);
+    const status = !rec ? 'absent' : rec.exitTime ? 'exit' : 'on_shift';
+    return {
+      name: e.fullName,
+      position: e.position,
+      entry: rec?.entryTime ?? null,
+      exit: rec?.exitTime ?? null,
+      status,
+      hours: rec ? hoursWorked(rec.entryTime, rec.exitTime) : 0,
+    };
+  });
 
   return (
     <AppLayout title="Карьер (добыча)" subtitle="Управление горнодобывающими работами">
@@ -143,14 +200,17 @@ export default function QuarryPage() {
 
       {tab === 'attendance' && (
         <div className="bg-white rounded-lg border border-gray-200">
+          {error && (
+            <div className="m-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5">{error}</div>
+          )}
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
             <h3 className="text-gray-700 font-semibold text-sm">Посещаемость — сегодня</h3>
             <div className="flex items-center gap-3 text-xs text-gray-400">
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-green-500" /> На смене: {ATTENDANCE.filter(a => a.status === 'on_shift').length}
+                <span className="w-2 h-2 rounded-full bg-green-500" /> На смене: {attendanceToday.filter(a => a.status === 'on_shift').length}
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-red-400" /> Отсутствует: {ATTENDANCE.filter(a => a.status === 'absent').length}
+                <span className="w-2 h-2 rounded-full bg-red-400" /> Отсутствует: {attendanceToday.filter(a => a.status === 'absent').length}
               </span>
             </div>
           </div>
@@ -167,7 +227,7 @@ export default function QuarryPage() {
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
-                {ATTENDANCE.map((a, i) => {
+                {attendanceToday.map((a, i) => {
                   const s = STATUS_MAP[a.status];
                   return (
                     <tr key={i} className="hover:bg-gray-50 transition-colors">

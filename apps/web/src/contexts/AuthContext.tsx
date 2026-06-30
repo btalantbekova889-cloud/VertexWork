@@ -1,46 +1,54 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { User, UserRole } from '@/types';
+import { User } from '@/types';
+import { apiFetch, ApiError } from '@/lib/api';
 
 interface AuthContextType {
   user: User | null;
-  login: (role: UserRole) => void;
-  logout: () => void;
+  login: (login: string, password: string) => Promise<void>;
+  logout: () => Promise<void>;
   isLoading: boolean;
+}
+
+interface ApiUser {
+  id: number;
+  login: string;
+  name: string;
+  role: User['role'];
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
-const MOCK_USERS: Record<UserRole, User> = {
-  director: { id: '1', name: 'Асылбек Марупов', role: 'director' },
-  commercial_director: { id: '2', name: 'Айгуль Касымова', role: 'commercial_director' },
-  accountant: { id: '3', name: 'Нурия Жакупова', role: 'accountant' },
-  hr: { id: '4', name: 'Дамир Сейтов', role: 'hr' },
-  quarry_manager: { id: '5', name: 'Болат Ержанов', role: 'quarry_manager' },
-};
+function toUser(apiUser: ApiUser): User {
+  return { id: String(apiUser.id), name: apiUser.name, role: apiUser.role };
+}
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const stored = localStorage.getItem('vertex_user');
-    if (stored) {
-      try { setUser(JSON.parse(stored)); } catch {}
-    }
-    setIsLoading(false);
+    apiFetch<{ user: ApiUser }>('/api/auth/me')
+      .then(({ user }) => setUser(toUser(user)))
+      .catch(() => setUser(null))
+      .finally(() => setIsLoading(false));
   }, []);
 
-  const login = (role: UserRole) => {
-    const u = MOCK_USERS[role];
-    setUser(u);
-    localStorage.setItem('vertex_user', JSON.stringify(u));
+  const login = async (loginValue: string, password: string) => {
+    const { user } = await apiFetch<{ user: ApiUser }>('/api/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ login: loginValue, password }),
+    });
+    setUser(toUser(user));
   };
 
-  const logout = () => {
-    setUser(null);
-    localStorage.removeItem('vertex_user');
+  const logout = async () => {
+    try {
+      await apiFetch('/api/auth/logout', { method: 'POST' });
+    } finally {
+      setUser(null);
+    }
   };
 
   return (
@@ -55,3 +63,5 @@ export function useAuth() {
   if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
   return ctx;
 }
+
+export { ApiError };

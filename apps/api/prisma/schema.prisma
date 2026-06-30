@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// Login accounts for the 5 ERP roles (director, commercial_director, accountant, hr, quarry_manager)
+model User {
+  id        Int      @id @default(autoincrement())
+  login     String   @unique
+  password  String
+  name      String
+  role      String
+  phone     String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+// Quarry staff (drivers, foremen, etc.) — distinct from User login accounts
+model Employee {
+  id         Int            @id @default(autoincrement())
+  fullName   String
+  position   String
+  baseSalary Decimal        @db.Decimal(12, 2)
+  phone      String?
+  inn        String?
+  hiredAt    DateTime?      @db.Date
+  isActive   Boolean        @default(true)
+  createdAt  DateTime       @default(now())
+  attendance Attendance[]
+  salaries   SalaryRecord[]
+  plate      Plate?
+}
+
+// Vehicle plate registered to an employee, used by the LPR/АРН camera system
+model Plate {
+  id         Int      @id @default(autoincrement())
+  plate      String   @unique
+  vehicle    String?
+  isActive   Boolean  @default(true)
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId Int      @unique
+}
+
+// Raw events ingested from the LPR cameras at the checkpoint
+model CameraEvent {
+  id        Int      @id @default(autoincrement())
+  cameraId  Int
+  location  String?
+  plate     String
+  direction String
+  isAuth    Boolean
+  orderNo   String?
+  photoUrl  String?
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+  @@index([plate])
+}
+
+// One row per employee per work day — fed either manually (HR/quarry tab) or by camera entry/exit
+model Attendance {
+  id         Int      @id @default(autoincrement())
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId Int
+  workDate   DateTime @db.Date
+  present    Boolean  @default(true)
+  entryTime  String?
+  exitTime   String?
+  source     String   @default("manual")
+
+  @@unique([employeeId, workDate])
+}
+
+// Monthly payroll per employee. Past months are finalized (isFinal=true); the
+// current month is recalculated on the fly from Attendance and stored on save.
+model SalaryRecord {
+  id         Int      @id @default(autoincrement())
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  employeeId Int
+  year       Int
+  month      Int
+  amount     Decimal  @db.Decimal(12, 2)
+  daysWorked Int?
+  isFinal    Boolean  @default(false)
+
+  @@unique([employeeId, year, month])
+}

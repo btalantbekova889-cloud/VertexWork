@@ -1,69 +1,115 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import AppLayout from '@/components/layout/AppLayout';
+import { apiFetch } from '@/lib/api';
+import { currentYearMonth, daysInMonth, isWeekend, MONTH_NAMES } from '@/lib/date';
 import { Download } from 'lucide-react';
 
-const EMPLOYEES = [
-  { id: 1, name: 'Ержанов Болат',     position: 'Начальник карьера', base: 45000 },
-  { id: 2, name: 'Ахметов Рустам',   position: 'Диспетчер',         base: 28000 },
-  { id: 3, name: 'Сейтов Марат',     position: 'Весовщик',          base: 20000 },
-  { id: 4, name: 'Нурланов Ерлан',   position: 'Водитель',          base: 22000 },
-  { id: 5, name: 'Жаксыбеков Айдан', position: 'Водитель',          base: 22000 },
-  { id: 6, name: 'Касымова Айгуль',  position: 'Менеджер продаж',   base: 30000 },
-  { id: 7, name: 'Жакупова Нурия',   position: 'Бухгалтер',         base: 35000 },
-];
+interface Employee {
+  id: number;
+  fullName: string;
+  position: string;
+  baseSalary: string;
+}
 
-// June 2026: Mon 1 – Tue 30; weekends: 6,7,13,14,20,21,27,28
-const JUNE_DAYS = 30;
-const WEEKENDS = new Set([6, 7, 13, 14, 20, 21, 27, 28]);
-const WORKING_DAYS_NORM = 22;
+interface AttendanceRecord {
+  id: number;
+  employeeId: number;
+  workDate: string;
+}
 
-const INIT_ATTENDANCE: Record<number, number[]> = {
-  1: [1,2,3,4,5,8,9,10,11,12,15,16,17,18,19,22,23,24,25,26,29,30],      // 22
-  2: [1,2,3,4,5,8,9,10,11,12,15,16,17,18,19,22,23,24,25,26,29],          // 21
-  3: [1,2,3,4,5,8,9,10,11,12,15,16,17,18,22,23,24,25,26,29,30],          // 21
-  4: [1,2,3,4,5,8,9,10,11,12,15,16,17,18,19,22,23,24,25,26,29,30],      // 22
-  5: [1,2,3,4,5,8,9,10,11,12,15,16,17,18,22,23,24,25,26,29],             // 20
-  6: [1,2,3,4,5,8,9,10,11,12,15,16,17,18,19,22,23,24,25,26,29,30],      // 22
-  7: [1,2,3,4,5,8,9,10,11,12,15,16,17,18,19,22,23,24,25,26,29,30],      // 22
-};
-
-const APRIL: Record<number, number> = { 1: 42000, 2: 28000, 3: 18200, 4: 22000, 5: 20000, 6: 30000, 7: 35000 };
-const MAY:   Record<number, number> = { 1: 45000, 2: 28000, 3: 20000, 4: 22000, 5: 22000, 6: 30000, 7: 35000 };
-
-const MONTHS_AFTER = ['Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь'];
-
-const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
-
-type AttendanceMap = Record<number, Set<number>>;
+interface SalaryMonthRow {
+  employeeId: number;
+  amount: number;
+  daysWorked: number;
+  isFinal: boolean;
+}
 
 export default function SalariesPage() {
-  const [tab, setTab] = useState<'attendance' | 'monthly'>('attendance');
-  const [attendance, setAttendance] = useState<AttendanceMap>(() =>
-    Object.fromEntries(
-      Object.entries(INIT_ATTENDANCE).map(([k, v]) => [Number(k), new Set(v)])
-    )
-  );
+  const { year, month } = currentYearMonth();
+  const monthDays = daysInMonth(year, month);
+  const DAYS = Array.from({ length: 31 }, (_, i) => i + 1);
 
-  const toggleDay = (empId: number, day: number) => {
-    if (WEEKENDS.has(day) || day > JUNE_DAYS) return;
-    setAttendance(prev => {
-      const s = new Set(prev[empId]);
-      s.has(day) ? s.delete(day) : s.add(day);
-      return { ...prev, [empId]: s };
-    });
+  const [tab, setTab] = useState<'attendance' | 'monthly'>('attendance');
+  const [employees, setEmployees] = useState<Employee[]>([]);
+  const [records, setRecords] = useState<AttendanceRecord[]>([]);
+  const [monthRows, setMonthRows] = useState<SalaryMonthRow[]>([]);
+  const [byEmployeeYear, setByEmployeeYear] = useState<Record<number, Record<number, number>>>({});
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  const load = useCallback(async () => {
+    try {
+      const [{ employees }, { records }, { rows }, { byEmployee }] = await Promise.all([
+        apiFetch<{ employees: Employee[] }>('/api/employees'),
+        apiFetch<{ records: AttendanceRecord[] }>(`/api/attendance?year=${year}&month=${month}`),
+        apiFetch<{ rows: SalaryMonthRow[] }>(`/api/salaries/month?year=${year}&month=${month}`),
+        apiFetch<{ byEmployee: Record<number, Record<number, number>> }>(`/api/salaries/year?year=${year}`),
+      ]);
+      setEmployees(employees);
+      setRecords(records);
+      setMonthRows(rows);
+      setByEmployeeYear(byEmployee);
+      setError('');
+    } catch {
+      setError('Не удалось загрузить данные зарплат. Проверьте подключение к серверу.');
+    } finally {
+      setLoading(false);
+    }
+  }, [year, month]);
+
+  useEffect(() => {
+    load();
+  }, [load]);
+
+  const attendanceSet = (empId: number) =>
+    new Set(
+      records
+        .filter(r => r.employeeId === empId)
+        .map(r => Number(r.workDate.slice(8, 10)))
+    );
+
+  const toggleDay = async (empId: number, day: number) => {
+    if (isWeekend(year, month, day) || day > monthDays) return;
+    const has = attendanceSet(empId).has(day);
+    setRecords(prev =>
+      has
+        ? prev.filter(r => !(r.employeeId === empId && Number(r.workDate.slice(8, 10)) === day))
+        : [...prev, { id: -Date.now(), employeeId: empId, workDate: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}` }]
+    );
+    try {
+      await apiFetch('/api/attendance/toggle', {
+        method: 'POST',
+        body: JSON.stringify({ employeeId: empId, year, month, day }),
+      });
+      const { rows } = await apiFetch<{ rows: SalaryMonthRow[] }>(`/api/salaries/month?year=${year}&month=${month}`);
+      setMonthRows(rows);
+    } catch {
+      setError('Не удалось сохранить отметку посещаемости.');
+      load();
+    }
   };
 
-  const getDays = (empId: number) => attendance[empId]?.size ?? 0;
-  const getJune = (emp: typeof EMPLOYEES[0]) =>
-    Math.round((emp.base / WORKING_DAYS_NORM) * getDays(emp.id));
+  const getDays = (empId: number) => attendanceSet(empId).size;
+  const getMonthAmount = (empId: number) => monthRows.find(r => r.employeeId === empId)?.amount ?? 0;
 
-  const totalCol = (fn: (e: typeof EMPLOYEES[0]) => number) =>
-    EMPLOYEES.reduce((s, e) => s + fn(e), 0);
+  const totalCol = (fn: (e: Employee) => number) => employees.reduce((s, e) => s + fn(e), 0);
+
+  if (loading) {
+    return (
+      <AppLayout title="Зарплаты" subtitle={`Табель и расчёт зарплат — ${MONTH_NAMES[month - 1]} ${year}`}>
+        <p className="text-gray-400 text-sm">Загрузка...</p>
+      </AppLayout>
+    );
+  }
 
   return (
-    <AppLayout title="Зарплаты" subtitle="Табель и расчёт зарплат — Июнь 2026">
+    <AppLayout title="Зарплаты" subtitle={`Табель и расчёт зарплат — ${MONTH_NAMES[month - 1]} ${year}`}>
+      {error && (
+        <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5">{error}</div>
+      )}
+
       <div className="flex gap-1 mb-4 bg-gray-100 rounded-lg p-1 w-fit">
         <button
           onClick={() => setTab('attendance')}
@@ -83,7 +129,7 @@ export default function SalariesPage() {
       {tab === 'attendance' && (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-            <h3 className="text-gray-700 font-semibold text-sm">Табель посещаемости — Июнь 2026</h3>
+            <h3 className="text-gray-700 font-semibold text-sm">Табель посещаемости — {MONTH_NAMES[month - 1]} {year}</h3>
             <div className="flex items-center gap-4 text-xs text-gray-400">
               <span className="flex items-center gap-1.5">
                 <span className="w-3 h-3 bg-gray-100 border border-gray-200 rounded inline-block" /> выходной
@@ -109,8 +155,8 @@ export default function SalariesPage() {
                     <th
                       key={d}
                       className={`border border-gray-200 py-2 text-center font-medium ${
-                        WEEKENDS.has(d)    ? 'bg-red-50 text-red-300'
-                        : d > JUNE_DAYS   ? 'bg-gray-100 text-gray-300'
+                        d > monthDays         ? 'bg-gray-100 text-gray-300'
+                        : isWeekend(year, month, d) ? 'bg-red-50 text-red-300'
                         : 'bg-gray-50 text-gray-600'
                       }`}
                       style={{ minWidth: '28px' }}
@@ -121,9 +167,10 @@ export default function SalariesPage() {
                 </tr>
               </thead>
               <tbody>
-                {EMPLOYEES.map((emp, idx) => {
+                {employees.map((emp, idx) => {
                   const daysWorked = getDays(emp.id);
-                  const salary = getJune(emp);
+                  const salary = getMonthAmount(emp.id);
+                  const present = attendanceSet(emp.id);
                   return (
                     <tr key={emp.id}>
                       <td
@@ -133,11 +180,11 @@ export default function SalariesPage() {
                       <td
                         className="border border-gray-200 px-3 py-2 text-gray-800 font-medium whitespace-nowrap bg-white"
                         style={{ position: 'sticky', left: '36px', zIndex: 1 }}
-                      >{emp.name}</td>
+                      >{emp.fullName}</td>
                       {DAYS.map(d => {
-                        const weekend   = WEEKENDS.has(d);
-                        const invalid   = d > JUNE_DAYS;
-                        const present   = attendance[emp.id]?.has(d);
+                        const weekend = isWeekend(year, month, d);
+                        const invalid = d > monthDays;
+                        const isPresent = present.has(d);
                         return (
                           <td
                             key={d}
@@ -145,12 +192,12 @@ export default function SalariesPage() {
                             className={`border border-gray-200 text-center py-2 transition-colors ${
                               weekend || invalid
                                 ? 'bg-gray-100 cursor-default'
-                                : present
+                                : isPresent
                                   ? 'bg-blue-50 cursor-pointer hover:bg-blue-100'
                                   : 'bg-white cursor-pointer hover:bg-gray-50'
                             }`}
                           >
-                            {present && !weekend && !invalid && (
+                            {isPresent && !weekend && !invalid && (
                               <span className="text-blue-600 font-bold leading-none">✓</span>
                             )}
                           </td>
@@ -175,9 +222,9 @@ export default function SalariesPage() {
                     style={{ position: 'sticky', left: '36px', zIndex: 1 }}
                   >ИТОГО</td>
                   {DAYS.map(d => {
-                    const weekend = WEEKENDS.has(d);
-                    const invalid = d > JUNE_DAYS;
-                    const count   = weekend || invalid ? 0 : EMPLOYEES.filter(e => attendance[e.id]?.has(d)).length;
+                    const weekend = isWeekend(year, month, d);
+                    const invalid = d > monthDays;
+                    const count   = weekend || invalid ? 0 : employees.filter(e => attendanceSet(e.id).has(d)).length;
                     return (
                       <td key={d} className={`border border-gray-200 text-center py-2.5 text-gray-500 font-medium ${weekend || invalid ? 'bg-gray-100' : 'bg-gray-50'}`}>
                         {count > 0 ? count : ''}
@@ -188,7 +235,7 @@ export default function SalariesPage() {
                     {totalCol(e => getDays(e.id))}
                   </td>
                   <td className="border border-gray-200 text-center font-bold text-blue-700 bg-blue-50 px-3 whitespace-nowrap">
-                    {totalCol(getJune).toLocaleString('ru-RU')} сом
+                    {totalCol(e => getMonthAmount(e.id)).toLocaleString('ru-RU')} сом
                   </td>
                 </tr>
               </tbody>
@@ -201,7 +248,7 @@ export default function SalariesPage() {
       {tab === 'monthly' && (
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
           <div className="px-4 py-3 border-b border-gray-100 flex items-center justify-between">
-            <h3 className="text-gray-700 font-semibold text-sm">Зарплата по месяцам — 2026</h3>
+            <h3 className="text-gray-700 font-semibold text-sm">Зарплата по месяцам — {year}</h3>
             <button className="text-xs px-3 py-1.5 rounded border border-gray-200 text-gray-500 hover:border-gray-300 flex items-center gap-1.5 transition-colors">
               <Download size={12} /> Экспорт Excel
             </button>
@@ -218,19 +265,26 @@ export default function SalariesPage() {
                     className="border border-gray-200 px-3 py-2 text-left text-gray-500 font-medium bg-gray-50"
                     style={{ position: 'sticky', left: '36px', zIndex: 3, minWidth: '170px' }}
                   >ФИО</th>
-                  <th className="border border-gray-200 px-4 py-2 text-center font-medium bg-gray-50 text-gray-600 whitespace-nowrap" style={{ minWidth: '90px' }}>Апрель</th>
-                  <th className="border border-gray-200 px-4 py-2 text-center font-medium bg-gray-50 text-gray-600 whitespace-nowrap" style={{ minWidth: '90px' }}>Май</th>
-                  <th className="border border-gray-200 px-4 py-2 text-center font-semibold bg-blue-50 text-blue-700 whitespace-nowrap" style={{ minWidth: '90px' }}>Июнь ✎</th>
-                  {MONTHS_AFTER.map(m => (
-                    <th key={m} className="border border-gray-200 px-4 py-2 text-center font-medium bg-gray-50 text-gray-400 whitespace-nowrap" style={{ minWidth: '90px' }}>{m}</th>
+                  {MONTH_NAMES.map((m, i) => (
+                    <th
+                      key={m}
+                      className={`border border-gray-200 px-4 py-2 text-center whitespace-nowrap ${
+                        i + 1 === month ? 'font-semibold bg-blue-50 text-blue-700' : 'font-medium bg-gray-50 text-gray-600'
+                      }`}
+                      style={{ minWidth: '90px' }}
+                    >
+                      {m}{i + 1 === month ? ' ✎' : ''}
+                    </th>
                   ))}
-                  <th className="border border-gray-200 px-4 py-2 text-center font-bold bg-blue-50 text-blue-700 whitespace-nowrap" style={{ minWidth: '110px' }}>Итог 2026</th>
+                  <th className="border border-gray-200 px-4 py-2 text-center font-bold bg-blue-50 text-blue-700 whitespace-nowrap" style={{ minWidth: '110px' }}>Итог {year}</th>
                 </tr>
               </thead>
               <tbody>
-                {EMPLOYEES.map((emp, idx) => {
-                  const june  = getJune(emp);
-                  const total = (APRIL[emp.id] || 0) + (MAY[emp.id] || 0) + june;
+                {employees.map((emp, idx) => {
+                  const monthAmounts = MONTH_NAMES.map((_, i) =>
+                    i + 1 === month ? getMonthAmount(emp.id) : (byEmployeeYear[emp.id]?.[i + 1] ?? 0)
+                  );
+                  const total = monthAmounts.reduce((s, v) => s + v, 0);
                   return (
                     <tr key={emp.id} className="hover:bg-gray-50 transition-colors">
                       <td
@@ -240,18 +294,16 @@ export default function SalariesPage() {
                       <td
                         className="border border-gray-200 px-3 py-2.5 text-gray-800 font-medium whitespace-nowrap bg-white"
                         style={{ position: 'sticky', left: '36px', zIndex: 1 }}
-                      >{emp.name}</td>
-                      <td className="border border-gray-200 px-4 py-2.5 text-center text-gray-700">
-                        {(APRIL[emp.id] || 0).toLocaleString('ru-RU')}
-                      </td>
-                      <td className="border border-gray-200 px-4 py-2.5 text-center text-gray-700">
-                        {(MAY[emp.id] || 0).toLocaleString('ru-RU')}
-                      </td>
-                      <td className="border border-gray-200 px-4 py-2.5 text-center font-semibold text-blue-700 bg-blue-50">
-                        {june.toLocaleString('ru-RU')}
-                      </td>
-                      {MONTHS_AFTER.map(m => (
-                        <td key={m} className="border border-gray-200 px-4 py-2.5 text-center text-gray-300">—</td>
+                      >{emp.fullName}</td>
+                      {monthAmounts.map((amount, i) => (
+                        <td
+                          key={i}
+                          className={`border border-gray-200 px-4 py-2.5 text-center ${
+                            i + 1 === month ? 'font-semibold text-blue-700 bg-blue-50' : 'text-gray-700'
+                          }`}
+                        >
+                          {amount > 0 ? amount.toLocaleString('ru-RU') : <span className="text-gray-300">—</span>}
+                        </td>
                       ))}
                       <td className="border border-gray-200 px-4 py-2.5 text-center font-bold text-blue-700 bg-blue-50">
                         {total.toLocaleString('ru-RU')}
@@ -270,22 +322,28 @@ export default function SalariesPage() {
                     className="border border-gray-200 px-3 py-3 font-semibold text-gray-600 bg-gray-50"
                     style={{ position: 'sticky', left: '36px', zIndex: 1 }}
                   >ИТОГО</td>
-                  <td className="border border-gray-200 px-4 py-3 text-center font-semibold text-gray-700">
-                    {EMPLOYEES.reduce((s, e) => s + (APRIL[e.id] || 0), 0).toLocaleString('ru-RU')}
-                  </td>
-                  <td className="border border-gray-200 px-4 py-3 text-center font-semibold text-gray-700">
-                    {EMPLOYEES.reduce((s, e) => s + (MAY[e.id] || 0), 0).toLocaleString('ru-RU')}
-                  </td>
+                  {MONTH_NAMES.map((_, i) => {
+                    const colTotal = employees.reduce((s, e) => {
+                      const amount = i + 1 === month ? getMonthAmount(e.id) : (byEmployeeYear[e.id]?.[i + 1] ?? 0);
+                      return s + amount;
+                    }, 0);
+                    return (
+                      <td
+                        key={i}
+                        className={`border border-gray-200 px-4 py-3 text-center font-semibold ${
+                          i + 1 === month ? 'font-bold text-blue-700 bg-blue-50' : 'text-gray-700'
+                        }`}
+                      >
+                        {colTotal > 0 ? colTotal.toLocaleString('ru-RU') : <span className="text-gray-300">—</span>}
+                      </td>
+                    );
+                  })}
                   <td className="border border-gray-200 px-4 py-3 text-center font-bold text-blue-700 bg-blue-50">
-                    {totalCol(getJune).toLocaleString('ru-RU')}
-                  </td>
-                  {MONTHS_AFTER.map(m => (
-                    <td key={m} className="border border-gray-200 px-4 py-3 text-center text-gray-300">—</td>
-                  ))}
-                  <td className="border border-gray-200 px-4 py-3 text-center font-bold text-blue-700 bg-blue-50">
-                    {EMPLOYEES.reduce((s, e) => {
-                      const june = getJune(e);
-                      return s + (APRIL[e.id] || 0) + (MAY[e.id] || 0) + june;
+                    {employees.reduce((s, e) => {
+                      const monthAmounts = MONTH_NAMES.map((_, i) =>
+                        i + 1 === month ? getMonthAmount(e.id) : (byEmployeeYear[e.id]?.[i + 1] ?? 0)
+                      );
+                      return s + monthAmounts.reduce((a, v) => a + v, 0);
                     }, 0).toLocaleString('ru-RU')}
                   </td>
                 </tr>
@@ -293,7 +351,7 @@ export default function SalariesPage() {
             </table>
           </div>
           <p className="px-4 py-2 text-xs text-gray-400 border-t border-gray-100">
-            Июнь рассчитывается автоматически из табеля посещаемости. Переключитесь на вкладку «Посещаемость» чтобы внести изменения.
+            {MONTH_NAMES[month - 1]} рассчитывается автоматически из табеля посещаемости. Переключитесь на вкладку «Посещаемость» чтобы внести изменения.
           </p>
         </div>
       )}
