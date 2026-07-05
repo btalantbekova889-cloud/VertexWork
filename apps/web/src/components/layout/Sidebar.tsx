@@ -7,7 +7,8 @@ import {
   FileText, BarChart3, Settings, ChevronDown, ChevronRight,
   BookOpen, PiggyBank, Receipt, FileBarChart2, ShoppingCart,
   Users, UserCog, Shield, Pickaxe, Truck, Scale, Warehouse,
-  Wrench, Lock, LogOut, Building2, TrendingUp
+  Wrench, AlertTriangle, LogOut, Building2, Megaphone,
+  ScrollText, FlaskConical, HardHat
 } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
@@ -22,60 +23,106 @@ interface NavItem {
   roles?: UserRole[];
 }
 
+const ALL: UserRole[] = ['director', 'coo', 'commercial_director', 'financial_director', 'accountant', 'hr', 'quarry_manager', 'marketer'];
+
 const NAV: NavItem[] = [
   {
     label: 'Дашборд',
     href: '/dashboard',
     icon: <LayoutDashboard size={16} />,
-    roles: ['director'],
+    roles: ['director', 'coo'],
   },
+
+  // ─── ФИНАНСЫ ───────────────────────────────────────────────
   {
-    label: 'Finance Core',
+    label: 'Финансы',
     icon: <DollarSign size={16} />,
-    roles: ['director', 'accountant'],
+    roles: ['director', 'coo', 'financial_director', 'accountant'],
     children: [
-      { label: 'Бухгалтерия', href: '/finance/accounting', icon: <BookOpen size={14} /> },
-      { label: 'Финансы', href: '/finance/finances', icon: <PiggyBank size={14} /> },
-      { label: 'Зарплаты', href: '/finance/salaries', icon: <Receipt size={14} /> },
-      { label: 'Отчёты', href: '/finance/reports', icon: <FileBarChart2 size={14} /> },
+      { label: 'Бухгалтерия',        href: '/finance/accounting', icon: <BookOpen size={14} /> },
+      { label: 'Финансовый план',     href: '/finance/finances',   icon: <PiggyBank size={14} /> },
+      { label: 'Зарплаты',           href: '/finance/salaries',   icon: <Receipt size={14} /> },
+      { label: 'Отчёты',             href: '/finance/reports',    icon: <FileBarChart2 size={14} /> },
     ],
   },
+
+  // ─── КОММЕРЦИЯ ─────────────────────────────────────────────
   {
-    label: 'Продажи',
+    label: 'Коммерция',
     icon: <Briefcase size={16} />,
-    roles: ['director', 'commercial_director'],
+    roles: ['director', 'commercial_director', 'marketer'],
     children: [
-      { label: 'Заказы (CRM)', href: '/business/sales', icon: <ShoppingCart size={14} /> },
-      { label: 'Клиенты', href: '/business/clients', icon: <Users size={14} /> },
+      { label: 'Заказы (CRM)',   href: '/business/sales',     icon: <ShoppingCart size={14} /> },
+      { label: 'Клиенты',       href: '/business/clients',   icon: <Users size={14} /> },
+      { label: 'Тендеры',       href: '/business/tenders',   icon: <ScrollText size={14} /> },
+      { label: 'Маркетинг',     href: '/business/marketing', icon: <Megaphone size={14} /> },
     ],
   },
+
+  // ─── ПЕРСОНАЛ ──────────────────────────────────────────────
   {
-    label: 'Персонал',
+    label: 'Персонал (HR)',
     icon: <UserCog size={16} />,
     roles: ['director', 'hr'],
     children: [
-      { label: 'Сотрудники', href: '/business/hr', icon: <Users size={14} /> },
-      { label: 'Администрирование', href: '/business/admin', icon: <Shield size={14} /> },
+      { label: 'Сотрудники',          href: '/business/hr',    icon: <Users size={14} /> },
+      { label: 'Администрирование',   href: '/business/admin', icon: <Shield size={14} /> },
     ],
+  },
+
+  // ─── ПРОИЗВОДСТВО ──────────────────────────────────────────
+  {
+    label: 'Производство',
+    icon: <Factory size={16} />,
+    roles: ['director', 'coo', 'quarry_manager'],
+    children: [
+      { label: 'Карьер (добыча)',  href: '/operations/quarry',   icon: <Pickaxe size={14} /> },
+      { label: 'Завод (ДСК)',      href: '/operations/factory',  icon: <Building2 size={14} /> },
+      { label: 'Техника',          href: '/operations/equipment',icon: <Wrench size={14} /> },
+      { label: 'Лаборатория ОКК', href: '/operations/lab',      icon: <FlaskConical size={14} /> },
+      { label: 'ОТ и ПБ',         href: '/operations/safety',   icon: <HardHat size={14} /> },
+    ],
+  },
+
+  // ─── ЛОГИСТИКА ─────────────────────────────────────────────
+  {
+    label: 'Логистика',
+    icon: <Truck size={16} />,
+    roles: ['director', 'coo', 'quarry_manager', 'commercial_director'],
+    children: [
+      { label: 'Диспетчерская', href: '/operations/dispatch',  icon: <Building2 size={14} /> },
+      { label: 'Транспорт',     href: '/operations/logistics', icon: <Truck size={14} /> },
+      { label: 'Весовая',       href: '/operations/weighing',  icon: <Scale size={14} /> },
+      { label: 'Склад',         href: '/operations/warehouse', icon: <Warehouse size={14} /> },
+      { label: 'Охрана КПП',    href: '/operations/security',  icon: <AlertTriangle size={14} /> },
+    ],
+  },
+
+  // ─── STANDALONE ────────────────────────────────────────────
+  {
+    label: 'Камеры (АРН)',
+    href: '/cameras',
+    icon: <Camera size={16} />,
+    roles: ['director', 'coo', 'quarry_manager', 'commercial_director'],
   },
   {
-    label: 'Operations Hub',
-    icon: <Factory size={16} />,
-    roles: ['director', 'quarry_manager'],
-    children: [
-      { label: 'Карьер (добыча)', href: '/operations/quarry', icon: <Pickaxe size={14} /> },
-      { label: 'Диспетчерская', href: '/operations/dispatch', icon: <Building2 size={14} /> },
-      { label: 'Логистика', href: '/operations/logistics', icon: <Truck size={14} /> },
-      { label: 'Весовая', href: '/operations/weighing', icon: <Scale size={14} /> },
-      { label: 'Склад', href: '/operations/warehouse', icon: <Warehouse size={14} /> },
-      { label: 'Техника', href: '/operations/equipment', icon: <Wrench size={14} /> },
-      { label: 'Охрана', href: '/operations/security', icon: <Lock size={14} /> },
-    ],
+    label: 'Документы',
+    href: '/documents',
+    icon: <FileText size={16} />,
+    roles: ['director', 'financial_director', 'accountant'],
   },
-  { label: 'Камеры (АРН)', href: '/cameras', icon: <Camera size={16} />, roles: ['director', 'quarry_manager', 'commercial_director'] },
-  { label: 'Документы', href: '/documents', icon: <FileText size={16} />, roles: ['director', 'accountant'] },
-  { label: 'Аналитика', href: '/analytics', icon: <BarChart3 size={16} />, roles: ['director', 'accountant', 'commercial_director', 'quarry_manager'] },
-  { label: 'Настройки', href: '/settings', icon: <Settings size={16} />, roles: ['director', 'hr'] },
+  {
+    label: 'Аналитика',
+    href: '/analytics',
+    icon: <BarChart3 size={16} />,
+    roles: ['director', 'coo', 'commercial_director', 'financial_director'],
+  },
+  {
+    label: 'Настройки',
+    href: '/settings',
+    icon: <Settings size={16} />,
+    roles: ['director', 'hr'],
+  },
 ];
 
 function NavRow({ item, depth = 0 }: { item: NavItem; depth?: number }) {
@@ -147,12 +194,12 @@ export default function Sidebar() {
       {/* Logo */}
       <div className="px-4 py-5 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded bg-blue-400 flex items-center justify-center flex-shrink-0">
+          <div className="w-8 h-8 rounded bg-orange-500 flex items-center justify-center flex-shrink-0">
             <span className="text-white font-bold text-sm">V</span>
           </div>
           <div>
-            <p className="text-white font-bold text-sm leading-tight">VERTEX ERP</p>
-            <p className="text-blue-300 text-xs">Управление компанией</p>
+            <p className="text-white font-bold text-sm leading-tight">VERTEX PLUS KG</p>
+            <p className="text-blue-300 text-xs">Добывающая компания</p>
           </div>
         </div>
       </div>
@@ -167,7 +214,7 @@ export default function Sidebar() {
       {/* User */}
       <div className="p-3 border-t border-white/10">
         <div className="flex items-center gap-2.5 px-2 py-2">
-          <div className="w-7 h-7 rounded-full bg-blue-400 flex items-center justify-center flex-shrink-0">
+          <div className="w-7 h-7 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0">
             <span className="text-white text-xs font-bold">{user?.name[0]}</span>
           </div>
           <div className="flex-1 min-w-0">

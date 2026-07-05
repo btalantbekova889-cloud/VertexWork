@@ -1,9 +1,12 @@
 export type UserRole =
   | 'director'
+  | 'coo'
   | 'commercial_director'
+  | 'financial_director'
   | 'accountant'
   | 'hr'
-  | 'quarry_manager';
+  | 'quarry_manager'
+  | 'marketer';
 
 export interface User {
   id: string;
@@ -12,9 +15,12 @@ export interface User {
 }
 
 export const ROLE_LABELS: Record<UserRole, string> = {
-  director: 'Генеральный директор',
+  director:            'Генеральный директор',
+  coo:                 'Исполнительный директор',
   commercial_director: 'Коммерческий директор',
-  accountant: 'Бухгалтер',
-  hr: 'HR',
-  quarry_manager: 'Начальник карьера',
+  financial_director:  'Финансовый директор',
+  accountant:          'Бухгалтер',
+  hr:                  'HR-менеджер',
+  quarry_manager:      'Директор карьера',
+  marketer:            'Маркетолог',
 };

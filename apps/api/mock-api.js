@@ -14,11 +14,14 @@ const PORT = 4000;
 // ─── Mock data ────────────────────────────────────────────────────────────────
 
 const USERS = [
-  { id: 1, login: 'director',   password: 'director2026',   name: 'Асылбек Марупов',      role: 'director' },
-  { id: 2, login: 'accountant', password: 'accountant2026', name: 'Айгуль Жаксыбекова',   role: 'accountant' },
-  { id: 3, login: 'hr',         password: 'hr2026',         name: 'Данияр Асылбеков',      role: 'hr' },
-  { id: 4, login: 'commercial', password: 'commercial2026', name: 'Нуржан Бейсенов',       role: 'commercial_director' },
-  { id: 5, login: 'quarry',     password: 'quarry2026',     name: 'Болат Ержанов',         role: 'quarry_manager' },
+  { id: 1, login: 'director',    password: 'director2026',    name: 'Асылбек Марупов',      role: 'director' },
+  { id: 2, login: 'coo',         password: 'coo2026',         name: 'Канатбек Осмонов',     role: 'coo' },
+  { id: 3, login: 'commercial',  password: 'commercial2026',  name: 'Нуржан Бейсенов',      role: 'commercial_director' },
+  { id: 4, login: 'findirector', password: 'findirector2026', name: 'Гульнара Сатыбалдиева', role: 'financial_director' },
+  { id: 5, login: 'accountant',  password: 'accountant2026',  name: 'Айгуль Жаксыбекова',   role: 'accountant' },
+  { id: 6, login: 'hr',          password: 'hr2026',          name: 'Данияр Асылбеков',      role: 'hr' },
+  { id: 7, login: 'quarry',      password: 'quarry2026',      name: 'Болат Ержанов',         role: 'quarry_manager' },
+  { id: 8, login: 'marketer',    password: 'marketer2026',    name: 'Айбек Жумабеков',       role: 'marketer' },
 ];
 
 const EMPLOYEES = [

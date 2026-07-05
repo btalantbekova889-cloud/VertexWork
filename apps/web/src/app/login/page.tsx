@@ -7,11 +7,14 @@ import { UserRole, ROLE_LABELS } from '@/types';
 import { Eye, EyeOff, ChevronDown, Check } from 'lucide-react';
 
 const ROLES: { role: UserRole; desc: string; login: string }[] = [
-  { role: 'director', desc: 'Полный доступ — контроль всей компании', login: 'director' },
-  { role: 'commercial_director', desc: 'Продажи, клиенты, цены, планы', login: 'commercial' },
-  { role: 'accountant', desc: 'Финансы, зарплаты, налоги, отчёты', login: 'accountant' },
-  { role: 'hr', desc: 'Кадры, доступы, настройки системы', login: 'hr' },
-  { role: 'quarry_manager', desc: 'Карьер, логистика, склад, охрана', login: 'quarry' },
+  { role: 'director',            desc: 'Полный доступ — стратегическое управление',       login: 'director' },
+  { role: 'coo',                 desc: 'Производство, карьер, логистика, ОТ и ПБ',         login: 'coo' },
+  { role: 'commercial_director', desc: 'Продажи, клиенты, тендеры, маркетинг',            login: 'commercial' },
+  { role: 'financial_director',  desc: 'Финансовый план, P&L, бюджет, налоги',            login: 'findirector' },
+  { role: 'accountant',          desc: 'Бухгалтерия, зарплаты, отчётность',               login: 'accountant' },
+  { role: 'hr',                  desc: 'Кадры, посещаемость, доступы',                    login: 'hr' },
+  { role: 'quarry_manager',      desc: 'Карьер, завод (ДСК), склад, охрана КПП',          login: 'quarry' },
+  { role: 'marketer',            desc: 'Реклама, SMM, контент, аналитика трафика',         login: 'marketer' },
 ];
 
 export default function LoginPage() {
