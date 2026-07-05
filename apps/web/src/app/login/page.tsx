@@ -8,55 +8,28 @@ import { Eye, EyeOff, ChevronDown, Check } from 'lucide-react';
 
 type RoleEntry = { role: UserRole; desc: string; login: string };
 
-const ROLE_GROUPS: { label: string; items: RoleEntry[] }[] = [
-  {
-    label: 'Руководство',
-    items: [
-      { role: 'director',            desc: 'Полный доступ — стратегическое управление',  login: 'director' },
-      { role: 'coo',                 desc: 'Производство, карьер, ОТ и ПБ, логистика',   login: 'coo' },
-    ],
-  },
-  {
-    label: 'Коммерческий блок',
-    items: [
-      { role: 'commercial_director', desc: 'Продажи, клиенты, тендеры, маркетинг',       login: 'commercial' },
-      { role: 'sales_manager',       desc: 'Работа с клиентами, заказы, CRM',             login: 'sales' },
-      { role: 'tender_specialist',   desc: 'Государственные и коммерческие тендеры',      login: 'tender' },
-      { role: 'marketer',            desc: 'Маркетинг, реклама, аналитика',              login: 'marketer' },
-      { role: 'smm_manager',         desc: 'Социальные сети, контент-план',              login: 'smm' },
-      { role: 'content_marketer',    desc: 'Контент для маркетинга и рекламы',           login: 'content' },
-      { role: 'logist',              desc: 'Транспортная логистика, отгрузки',           login: 'logist' },
-    ],
-  },
-  {
-    label: 'Финансы и юристы',
-    items: [
-      { role: 'financial_director',  desc: 'Финансовый план, P&L, бюджет, налоги',       login: 'findirector' },
-      { role: 'accountant',          desc: 'Бухгалтерия, зарплаты, отчётность',          login: 'accountant' },
-      { role: 'purchaser',           desc: 'Закупки материалов и оборудования',          login: 'zakup' },
-      { role: 'lawyer',              desc: 'Договоры, правовые вопросы',                 login: 'lawyer' },
-    ],
-  },
-  {
-    label: 'Персонал и ИТ',
-    items: [
-      { role: 'hr',                  desc: 'Кадры, посещаемость, доступы, найм',         login: 'hr' },
-      { role: 'office_admin',        desc: 'Делопроизводство, административная работа',  login: 'admin' },
-      { role: 'it_specialist',       desc: 'ИТ-инфраструктура, системы, доступы',        login: 'it' },
-      { role: 'operator',            desc: 'Диспетчер, ввод данных, телефония',          login: 'operator' },
-    ],
-  },
-  {
-    label: 'Производство и карьер',
-    items: [
-      { role: 'production_director', desc: 'Завод (ДСК), оборудование, ОТ и ПБ',        login: 'proddirector' },
-      { role: 'quarry_manager',      desc: 'Карьер, добыча, склад, охрана КПП',         login: 'quarry' },
-      { role: 'logistics_head',      desc: 'Весовая, транспорт, диспетчерская',          login: 'loghead' },
-    ],
-  },
+const ALL_ROLES: RoleEntry[] = [
+  { role: 'director',            desc: 'Полный доступ — стратегическое управление',  login: 'director' },
+  { role: 'coo',                 desc: 'Производство, карьер, ОТ и ПБ, логистика',   login: 'coo' },
+  { role: 'commercial_director', desc: 'Продажи, клиенты, тендеры, маркетинг',       login: 'commercial' },
+  { role: 'financial_director',  desc: 'Финансовый план, P&L, бюджет, налоги',       login: 'findirector' },
+  { role: 'hr',                  desc: 'Кадры, посещаемость, доступы, найм',         login: 'hr' },
+  { role: 'lawyer',              desc: 'Договоры, правовые вопросы',                 login: 'lawyer' },
+  { role: 'it_specialist',       desc: 'ИТ-инфраструктура, системы, доступы',        login: 'it' },
+  { role: 'marketer',            desc: 'Маркетинг, реклама, аналитика',              login: 'marketer' },
+  { role: 'sales_manager',       desc: 'Работа с клиентами, заказы, CRM',            login: 'sales' },
+  { role: 'logist',              desc: 'Транспортная логистика, отгрузки',           login: 'logist' },
+  { role: 'tender_specialist',   desc: 'Государственные и коммерческие тендеры',     login: 'tender' },
+  { role: 'operator',            desc: 'Диспетчер, ввод данных, телефония',          login: 'operator' },
+  { role: 'accountant',          desc: 'Бухгалтерия, зарплаты, отчётность',          login: 'accountant' },
+  { role: 'purchaser',           desc: 'Закупки материалов и оборудования',          login: 'zakup' },
+  { role: 'smm_manager',         desc: 'Социальные сети, контент-план',              login: 'smm' },
+  { role: 'content_marketer',    desc: 'Контент для маркетинга и рекламы',           login: 'content' },
+  { role: 'office_admin',        desc: 'Делопроизводство, административная работа',  login: 'admin' },
+  { role: 'production_director', desc: 'Завод (ДСК), оборудование, ОТ и ПБ',        login: 'proddirector' },
+  { role: 'quarry_manager',      desc: 'Карьер, добыча, склад, охрана КПП',         login: 'quarry' },
+  { role: 'logistics_head',      desc: 'Весовая, транспорт, диспетчерская',          login: 'loghead' },
 ];
-
-const ALL_ROLES: RoleEntry[] = ROLE_GROUPS.flatMap(g => g.items);
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -121,30 +94,23 @@ export default function LoginPage() {
 
                 {showRoles && (
                   <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg overflow-hidden z-50 shadow-lg max-h-80 overflow-y-auto">
-                    {ROLE_GROUPS.map(group => (
-                      <div key={group.label}>
-                        <div className="px-3 py-1.5 bg-gray-50 border-b border-gray-100">
-                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{group.label}</p>
+                    {ALL_ROLES.map(({ role, desc }) => (
+                      <button
+                        key={role}
+                        type="button"
+                        onClick={() => {
+                          setSelectedRole(role);
+                          setLoginValue(ALL_ROLES.find(r => r.role === role)!.login);
+                          setShowRoles(false);
+                        }}
+                        className={`w-full px-3 py-2.5 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 border-b border-gray-100 last:border-0 ${selectedRole === role ? 'bg-gray-50' : ''}`}
+                      >
+                        <div className="flex-1">
+                          <p className="text-gray-800 text-sm font-medium">{ROLE_LABELS[role]}</p>
+                          <p className="text-gray-400 text-xs">{desc}</p>
                         </div>
-                        {group.items.map(({ role, desc }) => (
-                          <button
-                            key={role}
-                            type="button"
-                            onClick={() => {
-                              setSelectedRole(role);
-                              setLoginValue(ALL_ROLES.find(r => r.role === role)!.login);
-                              setShowRoles(false);
-                            }}
-                            className={`w-full px-3 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 ${selectedRole === role ? 'bg-gray-50' : ''}`}
-                          >
-                            <div className="flex-1">
-                              <p className="text-gray-800 text-sm font-medium">{ROLE_LABELS[role]}</p>
-                              <p className="text-gray-400 text-xs">{desc}</p>
-                            </div>
-                            {selectedRole === role && <Check size={14} className="text-gray-600 flex-shrink-0" />}
-                          </button>
-                        ))}
-                      </div>
+                        {selectedRole === role && <Check size={14} className="text-gray-600 flex-shrink-0" />}
+                      </button>
                     ))}
                   </div>
                 )}
