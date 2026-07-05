@@ -6,16 +6,57 @@ import { useAuth, ApiError } from '@/contexts/AuthContext';
 import { UserRole, ROLE_LABELS } from '@/types';
 import { Eye, EyeOff, ChevronDown, Check } from 'lucide-react';
 
-const ROLES: { role: UserRole; desc: string; login: string }[] = [
-  { role: 'director',            desc: 'Полный доступ — стратегическое управление',       login: 'director' },
-  { role: 'coo',                 desc: 'Производство, карьер, логистика, ОТ и ПБ',         login: 'coo' },
-  { role: 'commercial_director', desc: 'Продажи, клиенты, тендеры, маркетинг',            login: 'commercial' },
-  { role: 'financial_director',  desc: 'Финансовый план, P&L, бюджет, налоги',            login: 'findirector' },
-  { role: 'accountant',          desc: 'Бухгалтерия, зарплаты, отчётность',               login: 'accountant' },
-  { role: 'hr',                  desc: 'Кадры, посещаемость, доступы',                    login: 'hr' },
-  { role: 'quarry_manager',      desc: 'Карьер, завод (ДСК), склад, охрана КПП',          login: 'quarry' },
-  { role: 'marketer',            desc: 'Реклама, SMM, контент, аналитика трафика',         login: 'marketer' },
+type RoleEntry = { role: UserRole; desc: string; login: string };
+
+const ROLE_GROUPS: { label: string; items: RoleEntry[] }[] = [
+  {
+    label: 'Руководство',
+    items: [
+      { role: 'director',            desc: 'Полный доступ — стратегическое управление',  login: 'director' },
+      { role: 'coo',                 desc: 'Производство, карьер, ОТ и ПБ, логистика',   login: 'coo' },
+    ],
+  },
+  {
+    label: 'Коммерческий блок',
+    items: [
+      { role: 'commercial_director', desc: 'Продажи, клиенты, тендеры, маркетинг',       login: 'commercial' },
+      { role: 'sales_manager',       desc: 'Работа с клиентами, заказы, CRM',             login: 'sales' },
+      { role: 'tender_specialist',   desc: 'Государственные и коммерческие тендеры',      login: 'tender' },
+      { role: 'marketer',            desc: 'Маркетинг, реклама, аналитика',              login: 'marketer' },
+      { role: 'smm_manager',         desc: 'Социальные сети, контент-план',              login: 'smm' },
+      { role: 'content_marketer',    desc: 'Контент для маркетинга и рекламы',           login: 'content' },
+      { role: 'logist',              desc: 'Транспортная логистика, отгрузки',           login: 'logist' },
+    ],
+  },
+  {
+    label: 'Финансы и юристы',
+    items: [
+      { role: 'financial_director',  desc: 'Финансовый план, P&L, бюджет, налоги',       login: 'findirector' },
+      { role: 'accountant',          desc: 'Бухгалтерия, зарплаты, отчётность',          login: 'accountant' },
+      { role: 'purchaser',           desc: 'Закупки материалов и оборудования',          login: 'zakup' },
+      { role: 'lawyer',              desc: 'Договоры, правовые вопросы',                 login: 'lawyer' },
+    ],
+  },
+  {
+    label: 'Персонал и ИТ',
+    items: [
+      { role: 'hr',                  desc: 'Кадры, посещаемость, доступы, найм',         login: 'hr' },
+      { role: 'office_admin',        desc: 'Делопроизводство, административная работа',  login: 'admin' },
+      { role: 'it_specialist',       desc: 'ИТ-инфраструктура, системы, доступы',        login: 'it' },
+      { role: 'operator',            desc: 'Диспетчер, ввод данных, телефония',          login: 'operator' },
+    ],
+  },
+  {
+    label: 'Производство и карьер',
+    items: [
+      { role: 'production_director', desc: 'Завод (ДСК), оборудование, ОТ и ПБ',        login: 'proddirector' },
+      { role: 'quarry_manager',      desc: 'Карьер, добыча, склад, охрана КПП',         login: 'quarry' },
+      { role: 'logistics_head',      desc: 'Весовая, транспорт, диспетчерская',          login: 'loghead' },
+    ],
+  },
 ];
+
+const ALL_ROLES: RoleEntry[] = ROLE_GROUPS.flatMap(g => g.items);
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -42,24 +83,24 @@ export default function LoginPage() {
     }
   };
 
-  const roleInfo = ROLES.find(r => r.role === selectedRole)!;
+  const roleInfo = ALL_ROLES.find(r => r.role === selectedRole)!;
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
       <div className="w-full max-w-sm">
         {/* Header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-blue-700 mb-4 shadow">
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-gray-900 mb-4">
             <span className="text-white font-bold text-lg">V</span>
           </div>
-          <h1 className="text-gray-900 font-bold text-2xl">VERTEX ERP</h1>
+          <h1 className="text-gray-900 font-bold text-2xl tracking-tight">VERTEX ERP</h1>
           <p className="text-gray-500 text-sm mt-1">Система управления компанией</p>
         </div>
 
         {/* Card */}
-        <div className="bg-white rounded-xl border border-gray-200 shadow-md p-6">
-          <h2 className="text-gray-800 font-semibold text-lg mb-1">Вход в систему</h2>
-          <p className="text-gray-400 text-sm mb-5">Выберите вашу роль и введите пароль</p>
+        <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+          <h2 className="text-gray-800 font-semibold text-base mb-1">Вход в систему</h2>
+          <p className="text-gray-400 text-sm mb-5">Выберите роль и введите пароль</p>
 
           <form onSubmit={handleLogin} className="space-y-4">
             {/* Role */}
@@ -69,7 +110,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowRoles(!showRoles)}
-                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-left flex items-center justify-between hover:border-blue-400 focus:outline-none focus:border-blue-500 transition-colors"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-left flex items-center justify-between hover:border-gray-400 focus:outline-none focus:border-gray-500 transition-colors"
                 >
                   <div>
                     <p className="text-gray-800 text-sm font-medium">{ROLE_LABELS[selectedRole]}</p>
@@ -79,24 +120,31 @@ export default function LoginPage() {
                 </button>
 
                 {showRoles && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg overflow-hidden z-50 shadow-lg">
-                    {ROLES.map(({ role, desc }) => (
-                      <button
-                        key={role}
-                        type="button"
-                        onClick={() => {
-                          setSelectedRole(role);
-                          setLoginValue(ROLES.find(r => r.role === role)!.login);
-                          setShowRoles(false);
-                        }}
-                        className={`w-full px-3 py-2.5 text-left hover:bg-blue-50 transition-colors flex items-center gap-2 ${selectedRole === role ? 'bg-blue-50' : ''}`}
-                      >
-                        <div className="flex-1">
-                          <p className="text-gray-800 text-sm font-medium">{ROLE_LABELS[role]}</p>
-                          <p className="text-gray-400 text-xs">{desc}</p>
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg overflow-hidden z-50 shadow-lg max-h-80 overflow-y-auto">
+                    {ROLE_GROUPS.map(group => (
+                      <div key={group.label}>
+                        <div className="px-3 py-1.5 bg-gray-50 border-b border-gray-100">
+                          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide">{group.label}</p>
                         </div>
-                        {selectedRole === role && <Check size={14} className="text-blue-600 flex-shrink-0" />}
-                      </button>
+                        {group.items.map(({ role, desc }) => (
+                          <button
+                            key={role}
+                            type="button"
+                            onClick={() => {
+                              setSelectedRole(role);
+                              setLoginValue(ALL_ROLES.find(r => r.role === role)!.login);
+                              setShowRoles(false);
+                            }}
+                            className={`w-full px-3 py-2 text-left hover:bg-gray-50 transition-colors flex items-center gap-2 ${selectedRole === role ? 'bg-gray-50' : ''}`}
+                          >
+                            <div className="flex-1">
+                              <p className="text-gray-800 text-sm font-medium">{ROLE_LABELS[role]}</p>
+                              <p className="text-gray-400 text-xs">{desc}</p>
+                            </div>
+                            {selectedRole === role && <Check size={14} className="text-gray-600 flex-shrink-0" />}
+                          </button>
+                        ))}
+                      </div>
                     ))}
                   </div>
                 )}
@@ -110,7 +158,7 @@ export default function LoginPage() {
                 type="text"
                 value={loginValue}
                 onChange={e => setLoginValue(e.target.value)}
-                className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
+                className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-500 transition-colors"
               />
             </div>
 
@@ -123,7 +171,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 pr-10 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-blue-500 transition-colors"
+                  className="w-full bg-white border border-gray-300 rounded-lg px-3 py-2.5 pr-10 text-gray-800 text-sm placeholder-gray-400 focus:outline-none focus:border-gray-500 transition-colors"
                 />
                 <button
                   type="button"
@@ -142,7 +190,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-blue-700 hover:bg-blue-800 disabled:opacity-60 text-white font-semibold py-2.5 rounded-lg transition-colors shadow-sm mt-1"
+              className="w-full bg-gray-900 hover:bg-gray-800 disabled:opacity-60 text-white font-semibold py-2.5 rounded-lg transition-colors mt-1"
             >
               {loading ? 'Вход...' : 'Войти'}
             </button>
