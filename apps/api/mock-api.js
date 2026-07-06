@@ -86,6 +86,69 @@ let TENDERS = [
 let nextTenderId = 6;
 let nextTenderNum = 42;
 
+// ─── Vehicles ─────────────────────────────────────────────────────────────────
+
+let VEHICLES = [
+  { id: 1, plate: 'A 147 KG', driver: 'Нурланов Е.',     capacity: 30, status: 'on_route',    order: 'ОРД-2847', eta: '14:30' },
+  { id: 2, plate: 'B 234 KG', driver: 'Жаксыбеков А.',   capacity: 28, status: 'loading',     order: 'ОРД-2846', eta: '—' },
+  { id: 3, plate: 'C 089 KG', driver: 'Темиров К.',       capacity: 32, status: 'available',   order: null,       eta: '—' },
+  { id: 4, plate: 'D 456 KG', driver: 'Сатыбалдиев О.',  capacity: 28, status: 'available',   order: null,       eta: '—' },
+  { id: 5, plate: 'E 778 KG', driver: 'Алиев Р.',         capacity: 30, status: 'maintenance', order: null,       eta: '—' },
+];
+
+// ─── Repair requests ──────────────────────────────────────────────────────────
+
+let REPAIR_REQUESTS = [];
+let nextRepairId = 1;
+
+// ─── Security passes ──────────────────────────────────────────────────────────
+
+let PASSES = [
+  { id: 1, time: '09:45', vehicle: 'A 147 KG', driver: 'Нурланов Е.',     type: 'exit',  order: 'ОРД-2847', weight: '53.4 т', approved: 'Байжанов С.' },
+  { id: 2, time: '09:30', vehicle: 'D 456 KG', driver: 'Сатыбалдиев О.', type: 'entry', order: 'ОРД-2845', weight: '24.2 т', approved: 'Байжанов С.' },
+  { id: 3, time: '09:15', vehicle: 'B 234 KG', driver: 'Жаксыбеков А.',   type: 'entry', order: 'ОРД-2846', weight: '24.6 т', approved: 'Байжанов С.' },
+  { id: 4, time: '09:00', vehicle: 'C 089 KG', driver: 'Темиров К.',       type: 'exit',  order: 'ОРД-2848', weight: '58.1 т', approved: 'Байжанов С.' },
+  { id: 5, time: '08:45', vehicle: 'F 321 KG', driver: 'Алиев Р.',         type: 'exit',  order: 'ОРД-2844', weight: '55.2 т', approved: 'Байжанов С.' },
+  { id: 6, time: '08:30', vehicle: 'A 147 KG', driver: 'Нурланов Е.',     type: 'entry', order: 'ОРД-2847', weight: '24.2 т', approved: 'Байжанов С.' },
+];
+let nextPassId = 7;
+
+// ─── Visitors ─────────────────────────────────────────────────────────────────
+
+let VISITORS = [
+  { id: 1, name: 'Петров А.В.',   company: 'ТОО "АлтайСтрой"',    purpose: 'Проверка груза', in: '09:00', out: null,    pass: 'ВП-0445' },
+  { id: 2, name: 'Иванова М.С.', company: 'Налоговая инспекция',  purpose: 'Проверка',       in: '10:30', out: null,    pass: 'ВП-0446' },
+  { id: 3, name: 'Сидоров К.П.', company: 'АО "СтройКонсалт"',   purpose: 'Самовывоз',      in: '08:15', out: '08:55', pass: 'ВП-0444' },
+];
+let nextVisitorId = 4;
+let nextVisitorPass = 447;
+
+// ─── Weighings ────────────────────────────────────────────────────────────────
+
+let WEIGHINGS = [
+  { id: 1, weighId: 'ВС-4525', vehicle: 'A 147 KG', driver: 'Нурланов Е.',    order: 'ОРД-2847', material: 'Щебень фр.20-40', gross: 53.4, tare: 24.2, net: 29.2, time: '08:45', status: 'done' },
+  { id: 2, weighId: 'ВС-4524', vehicle: 'B 234 KG', driver: 'Жаксыбеков А.',  order: 'ОРД-2846', material: 'Щебень фр.5-20',  gross: 54.8, tare: 24.6, net: 30.2, time: '08:30', status: 'done' },
+  { id: 3, weighId: 'ВС-4523', vehicle: 'C 089 KG', driver: 'Темиров К.',      order: 'ОРД-2848', material: 'Щебень фр.20-40', gross: 58.1, tare: 25.4, net: 32.7, time: '08:15', status: 'done' },
+  { id: 4, weighId: 'ВС-4522', vehicle: 'D 456 KG', driver: 'Сатыбалдиев О.', order: 'ОРД-2845', material: 'Отсев',           gross: 51.2, tare: 23.8, net: 27.4, time: '07:55', status: 'done' },
+];
+let nextWeighingId = 5;
+let nextWeighingNum = 4526;
+
+// ─── Documents ────────────────────────────────────────────────────────────────
+
+let DOCUMENTS = [
+  { id: 1, docId: 'СЧТ-2847',    type: 'Счет',        client: 'ТОО "АлтайСтрой"', amount: 480000,  date: '29.06.2026', status: 'paid',      ext: 'PDF' },
+  { id: 2, docId: 'АКТ-2847',    type: 'Акт',         client: 'ТОО "АлтайСтрой"', amount: 480000,  date: '29.06.2026', status: 'signed',    ext: 'PDF' },
+  { id: 3, docId: 'НТ-12233',    type: 'Накладная',   client: 'ТОО "АлтайСтрой"', amount: 480000,  date: '29.06.2026', status: 'issued',    ext: 'PDF' },
+  { id: 4, docId: 'СЧТ-2846',    type: 'Счет',        client: 'ИП Казаков В.С.',   amount: 296000,  date: '29.06.2026', status: 'pending',   ext: 'PDF' },
+  { id: 5, docId: 'АКТ-2844',    type: 'Акт',         client: 'АО "СтройКонсалт"', amount: 1050000, date: '28.06.2026', status: 'signed',    ext: 'PDF' },
+  { id: 6, docId: 'СЧТ-2844',    type: 'Счет',        client: 'АО "СтройКонсалт"', amount: 1050000, date: '28.06.2026', status: 'paid',      ext: 'PDF' },
+  { id: 7, docId: 'ДОГ-2026-047',type: 'Договор',     client: 'ТОО "НурБетон"',    amount: null,    date: '25.06.2026', status: 'active',    ext: 'DOCX' },
+  { id: 8, docId: 'НО-2026-06',  type: 'Налог. отчет',client: null,                amount: null,    date: '20.06.2026', status: 'submitted', ext: 'PDF' },
+];
+let nextDocId = 9;
+let nextDocNum = 2848;
+
 // ─── Attendance ───────────────────────────────────────────────────────────────
 
 const JUNE_WORK_DAYS = [1,2,3,4,5, 8,9,10,11,12, 15,16,17,18,19, 22,23,24,25,26, 29,30];
@@ -388,6 +451,161 @@ const server = http.createServer(async (req, res) => {
     const idx = TENDERS.findIndex(t => t.id === tenderId);
     if (idx !== -1) TENDERS.splice(idx, 1);
     return send(res, 200, { ok: true });
+  }
+
+  // ── Vehicles ─────────────────────────────────────────────────────────────────
+  if (path === '/api/vehicles' && method === 'GET') {
+    return send(res, 200, { vehicles: VEHICLES });
+  }
+  const vehicleId = pathId(path, '/api/vehicles');
+  if (vehicleId !== null && method === 'PATCH') {
+    const body = await readBody(req);
+    const v = VEHICLES.find(v => v.id === vehicleId);
+    if (v) Object.assign(v, body);
+    return send(res, 200, { vehicle: v });
+  }
+
+  // ── Repair requests ──────────────────────────────────────────────────────────
+  if (path === '/api/repair-requests' && method === 'GET') {
+    return send(res, 200, { requests: REPAIR_REQUESTS });
+  }
+  if (path === '/api/repair-requests' && method === 'POST') {
+    const body = await readBody(req);
+    const now = new Date().toLocaleString('ru-RU');
+    const rr = {
+      id: nextRepairId++,
+      equipmentId:   (body.equipmentId   || '').trim(),
+      equipmentName: (body.equipmentName || '').trim(),
+      problem:       (body.problem       || '').trim(),
+      priority:       body.priority      || 'normal',
+      status: 'open',
+      createdAt: now,
+    };
+    REPAIR_REQUESTS.unshift(rr);
+    return send(res, 201, { request: rr });
+  }
+
+  // ── Passes ───────────────────────────────────────────────────────────────────
+  if (path === '/api/passes' && method === 'GET') {
+    return send(res, 200, { passes: PASSES });
+  }
+  if (path === '/api/passes' && method === 'POST') {
+    const body = await readBody(req);
+    const now = new Date();
+    const t = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const p = {
+      id: nextPassId++,
+      time: t,
+      vehicle:  (body.vehicle  || '').trim().toUpperCase(),
+      driver:   (body.driver   || '').trim(),
+      type:      body.type     || 'entry',
+      order:    (body.order    || '').trim(),
+      weight:   (body.weight   || '—'),
+      approved: (body.approved || 'Дежурный'),
+    };
+    PASSES.unshift(p);
+    return send(res, 201, { pass: p });
+  }
+
+  // ── Visitors ─────────────────────────────────────────────────────────────────
+  if (path === '/api/visitors' && method === 'GET') {
+    return send(res, 200, { visitors: VISITORS });
+  }
+  if (path === '/api/visitors' && method === 'POST') {
+    const body = await readBody(req);
+    const now = new Date();
+    const t = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const vis = {
+      id:      nextVisitorId++,
+      name:    (body.name    || '').trim(),
+      company: (body.company || '').trim(),
+      purpose: (body.purpose || '').trim(),
+      in:  t,
+      out: null,
+      pass: `ВП-0${nextVisitorPass++}`,
+    };
+    VISITORS.unshift(vis);
+    return send(res, 201, { visitor: vis });
+  }
+  const visitorId = pathId(path, '/api/visitors');
+  if (visitorId !== null && method === 'PATCH') {
+    const body = await readBody(req);
+    const vis = VISITORS.find(v => v.id === visitorId);
+    if (vis) Object.assign(vis, body);
+    return send(res, 200, { visitor: vis });
+  }
+
+  // ── Weighings ────────────────────────────────────────────────────────────────
+  if (path === '/api/weighings' && method === 'GET') {
+    return send(res, 200, { weighings: WEIGHINGS });
+  }
+  if (path === '/api/weighings' && method === 'POST') {
+    const body = await readBody(req);
+    const now = new Date();
+    const t = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    const gross = Number(body.gross) || 0;
+    const tare  = Number(body.tare)  || 0;
+    const w = {
+      id:      nextWeighingId++,
+      weighId: `ВС-${nextWeighingNum++}`,
+      vehicle:  (body.vehicle  || '').trim().toUpperCase(),
+      driver:   (body.driver   || '').trim(),
+      order:    (body.order    || '').trim(),
+      material:  body.material || 'Щебень фр.20-40',
+      gross, tare,
+      net: Math.max(0, +(gross - tare).toFixed(1)),
+      time: t,
+      status: 'done',
+    };
+    WEIGHINGS.unshift(w);
+    return send(res, 201, { weighing: w });
+  }
+
+  // ── Documents ─────────────────────────────────────────────────────────────────
+  if (path === '/api/documents' && method === 'GET') {
+    return send(res, 200, { documents: DOCUMENTS });
+  }
+  if (path === '/api/documents' && method === 'POST') {
+    const body = await readBody(req);
+    const today = new Date().toLocaleDateString('ru-RU');
+    const doc = {
+      id:     nextDocId++,
+      docId:  `СЧТ-${nextDocNum++}`,
+      type:    body.type   || 'Счет',
+      client: (body.client || '').trim() || null,
+      amount:  body.amount ? Number(body.amount) : null,
+      date:    today,
+      status: 'pending',
+      ext:    'PDF',
+    };
+    DOCUMENTS.unshift(doc);
+    return send(res, 201, { document: doc });
+  }
+
+  // ── Attendance mark (ручная отметка начальника карьера) ───────────────────────
+  if (path === '/api/attendance/mark' && method === 'POST') {
+    const body = await readBody(req);
+    const { employeeId, action } = body;
+    const now = new Date();
+    const workDate = `${now.getUTCFullYear()}-${String(now.getUTCMonth()+1).padStart(2,'0')}-${String(now.getUTCDate()).padStart(2,'0')}T00:00:00.000Z`;
+    const timeStr = `${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+    let rec = ATTENDANCE.find(r => r.employeeId === employeeId && r.workDate === workDate);
+    if (action === 'entry') {
+      if (rec) { rec.entryTime = timeStr; }
+      else { rec = { id: Date.now(), employeeId, workDate, entryTime: timeStr, exitTime: null, source: 'manual' }; ATTENDANCE.push(rec); }
+      return send(res, 200, { record: rec });
+    }
+    if (action === 'exit') {
+      if (!rec) return send(res, 400, { error: 'Нет записи о въезде' });
+      rec.exitTime = timeStr;
+      return send(res, 200, { record: rec });
+    }
+    if (action === 'remove') {
+      const idx = ATTENDANCE.findIndex(r => r.employeeId === employeeId && r.workDate === workDate);
+      if (idx !== -1) ATTENDANCE.splice(idx, 1);
+      return send(res, 200, { removed: true });
+    }
+    return send(res, 400, { error: 'Unknown action' });
   }
 
   // ── Cameras ─────────────────────────────────────────────────────────────────
