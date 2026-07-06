@@ -37,18 +37,20 @@ const USERS = [
 // ─── Employees ────────────────────────────────────────────────────────────────
 
 let EMPLOYEES = [
-  { id: 1,  name: 'Ержанов Болат',      fullName: 'Ержанов Болат',      dept: 'Производство', position: 'Оператор экскаватора', hired: '02.06.2021', status: 'active',    vacation: null,        baseSalary: 70000,  plate: { plate: 'KG 0012 AB', vehicle: 'КАМАЗ-65115' } },
-  { id: 2,  name: 'Темиров Алмас',      fullName: 'Темиров Алмас',      dept: 'Логистика',    position: 'Водитель самосвала',   hired: '12.03.2023', status: 'active',    vacation: 'Июль 2026', baseSalary: 65000,  plate: { plate: 'KG 1543 CD', vehicle: 'Volvo FH16' } },
-  { id: 3,  name: 'Касымов Нурлан',     fullName: 'Касымов Нурлан',     dept: 'Производство', position: 'Механик',              hired: '05.01.2023', status: 'active',    vacation: null,        baseSalary: 75000,  plate: null },
-  { id: 4,  name: 'Асылбеков Данияр',   fullName: 'Асылбеков Данияр',   dept: 'Производство', position: 'Инженер-геолог',       hired: '15.11.2022', status: 'active',    vacation: null,        baseSalary: 90000,  plate: { plate: 'KG 7723 EF', vehicle: 'Toyota Land Cruiser 200' } },
-  { id: 5,  name: 'Жаксыбекова Айгуль', fullName: 'Жаксыбекова Айгуль', dept: 'Финансы',      position: 'Бухгалтер',            hired: '01.04.2022', status: 'active',    vacation: null,        baseSalary: 80000,  plate: null },
-  { id: 6,  name: 'Маратов Серик',      fullName: 'Маратов Серик',      dept: 'Охрана',       position: 'Охранник КПП',         hired: '08.08.2023', status: 'active',    vacation: null,        baseSalary: 55000,  plate: { plate: 'KG 3312 GH', vehicle: 'ВАЗ-21099' } },
-  { id: 7,  name: 'Дуйсенов Берик',     fullName: 'Дуйсенов Берик',     dept: 'Производство', position: 'Геодезист',            hired: '22.05.2023', status: 'active',    vacation: null,        baseSalary: 85000,  plate: null },
-  { id: 8,  name: 'Сейтов Дамир',       fullName: 'Сейтов Дамир',       dept: 'HR',           position: 'HR-менеджер',          hired: '15.11.2022', status: 'active',    vacation: null,        baseSalary: 80000,  plate: null },
-  { id: 9,  name: 'Байжанов Серик',     fullName: 'Байжанов Серик',     dept: 'Охрана',       position: 'Охранник',             hired: '08.08.2023', status: 'active',    vacation: null,        baseSalary: 55000,  plate: null },
-  { id: 10, name: 'Жаксыбеков Айдан',   fullName: 'Жаксыбеков Айдан',   dept: 'Логистика',    position: 'Водитель',             hired: '14.10.2023', status: 'probation', vacation: null,        baseSalary: 50000,  plate: null },
+  { id: 1,  name: 'Орозалиев Байсейит',  fullName: 'Орозалиев Байсейит',  dept: 'Производство', position: 'Оператор экскаватора', hired: '01.03.2026', status: 'active', vacation: null, baseSalary: 60000,  plate: null },
+  { id: 2,  name: 'Молдобаев Орозбек',   fullName: 'Молдобаев Орозбек',   dept: 'Производство', position: 'Прораб',               hired: '01.04.2026', status: 'active', vacation: null, baseSalary: 105000, plate: null },
+  { id: 3,  name: 'Кучибаев Закир',      fullName: 'Кучибаев Закир',      dept: 'Производство', position: 'Механик',              hired: '01.04.2026', status: 'active', vacation: null, baseSalary: 105000, plate: null },
+  { id: 4,  name: 'Чылпаков Руслан',     fullName: 'Чылпаков Руслан',     dept: 'Логистика',    position: 'Водитель самосвала',   hired: '01.05.2026', status: 'active', vacation: null, baseSalary: 75000,  plate: null },
+  { id: 5,  name: 'Расулов Алибай',      fullName: 'Расулов Алибай',      dept: 'Производство', position: 'Оператор буровой',     hired: '01.04.2026', status: 'active', vacation: null, baseSalary: 75000,  plate: null },
+  { id: 6,  name: 'Вахабов Надыр',       fullName: 'Вахабов Надыр',       dept: 'Производство', position: 'Начальник смены',      hired: '01.05.2026', status: 'active', vacation: null, baseSalary: 150000, plate: null },
+  { id: 7,  name: 'Капизов Чынгыз',      fullName: 'Капизов Чынгыз',      dept: 'Производство', position: 'Инженер-геолог',       hired: '01.04.2026', status: 'active', vacation: null, baseSalary: 100000, plate: null },
+  { id: 8,  name: 'Мусаканова Адиля',    fullName: 'Мусаканова Адиля',    dept: 'Финансы',      position: 'Бухгалтер',            hired: '01.04.2026', status: 'active', vacation: null, baseSalary: 60000,  plate: null },
+  { id: 9,  name: 'Таланбек Нурсултан',  fullName: 'Таланбек Нурсултан',  dept: 'Производство', position: 'Мастер участка',       hired: '01.04.2026', status: 'active', vacation: null, baseSalary: 100000, plate: null },
+  { id: 10, name: 'Темирлан Жамгыр',     fullName: 'Темирлан Жамгыр',     dept: 'Логистика',    position: 'Водитель',             hired: '01.04.2026', status: 'active', vacation: null, baseSalary: 60000,  plate: null },
+  { id: 11, name: 'Самир Расул',         fullName: 'Самир Расул',         dept: 'Производство', position: 'Машинист дробилки',    hired: '01.04.2026', status: 'active', vacation: null, baseSalary: 60000,  plate: null },
+  { id: 12, name: 'Карыке Жакшылык',     fullName: 'Карыке Жакшылык',     dept: 'Производство', position: 'Стропальщик',          hired: '01.04.2026', status: 'active', vacation: null, baseSalary: 60000,  plate: null },
 ];
-let nextEmployeeId = 11;
+let nextEmployeeId = 13;
 
 // ─── Clients ──────────────────────────────────────────────────────────────────
 
@@ -149,42 +151,101 @@ let DOCUMENTS = [
 let nextDocId = 9;
 let nextDocNum = 2848;
 
+// ─── Salary history (actual payroll records from 1C/Excel) ─────────────────────
+
+let SALARY_HISTORY = [
+  // March 2026
+  { id: 1,  employeeId: 1,  year: 2026, month: 3, baseSalary: 30000,  totalDays: 31, workedDays: 30, accrued: 30000,  advance: 20000,  transferred: true  },
+  // April 2026
+  { id: 2,  employeeId: 1,  year: 2026, month: 4, baseSalary: 40000,  totalDays: 30, workedDays: 29, accrued: 38667,  advance: 20000,  transferred: true  },
+  { id: 3,  employeeId: 2,  year: 2026, month: 4, baseSalary: 105000, totalDays: 30, workedDays: 27, accrued: 94500,  advance: 15000,  transferred: true  },
+  { id: 4,  employeeId: 3,  year: 2026, month: 4, baseSalary: 105000, totalDays: 30, workedDays: 30, accrued: 105000, advance: 15000,  transferred: true  },
+  { id: 5,  employeeId: 4,  year: 2026, month: 4, baseSalary: 0,      totalDays: 30, workedDays: 0,  accrued: 0,      advance: 0,      transferred: true  },
+  { id: 6,  employeeId: 5,  year: 2026, month: 4, baseSalary: 75000,  totalDays: 30, workedDays: 30, accrued: 75000,  advance: 15000,  transferred: true  },
+  { id: 7,  employeeId: 6,  year: 2026, month: 4, baseSalary: 0,      totalDays: 30, workedDays: 0,  accrued: 0,      advance: 0,      transferred: true  },
+  { id: 8,  employeeId: 7,  year: 2026, month: 4, baseSalary: 100000, totalDays: 30, workedDays: 12, accrued: 40000,  advance: 15000,  transferred: true  },
+  { id: 9,  employeeId: 8,  year: 2026, month: 4, baseSalary: 60000,  totalDays: 30, workedDays: 21, accrued: 42000,  advance: 60000,  transferred: true  },
+  { id: 10, employeeId: 9,  year: 2026, month: 4, baseSalary: 100000, totalDays: 30, workedDays: 30, accrued: 100000, advance: 0,      transferred: true  },
+  { id: 11, employeeId: 10, year: 2026, month: 4, baseSalary: 75000,  totalDays: 30, workedDays: 20, accrued: 50000,  advance: 15000,  transferred: true  },
+  { id: 12, employeeId: 11, year: 2026, month: 4, baseSalary: 75000,  totalDays: 30, workedDays: 14, accrued: 35000,  advance: 15000,  transferred: true  },
+  { id: 13, employeeId: 12, year: 2026, month: 4, baseSalary: 60000,  totalDays: 30, workedDays: 4,  accrued: 8000,   advance: 15000,  transferred: true  },
+  // May 2026
+  { id: 14, employeeId: 1,  year: 2026, month: 5, baseSalary: 60000,  totalDays: 30, workedDays: 22, accrued: 44000,  advance: 47000,  transferred: true  },
+  { id: 15, employeeId: 2,  year: 2026, month: 5, baseSalary: 105000, totalDays: 30, workedDays: 13, accrued: 45500,  advance: 29000,  transferred: true  },
+  { id: 16, employeeId: 3,  year: 2026, month: 5, baseSalary: 105000, totalDays: 30, workedDays: 24, accrued: 84000,  advance: 42000,  transferred: true  },
+  { id: 17, employeeId: 4,  year: 2026, month: 5, baseSalary: 60000,  totalDays: 30, workedDays: 22, accrued: 44000,  advance: 32000,  transferred: true  },
+  { id: 18, employeeId: 5,  year: 2026, month: 5, baseSalary: 75000,  totalDays: 30, workedDays: 23, accrued: 57500,  advance: 42000,  transferred: true  },
+  { id: 19, employeeId: 6,  year: 2026, month: 5, baseSalary: 150000, totalDays: 30, workedDays: 19, accrued: 95000,  advance: 132000, transferred: true  },
+  { id: 20, employeeId: 7,  year: 2026, month: 5, baseSalary: 100000, totalDays: 30, workedDays: 12, accrued: 40000,  advance: 27000,  transferred: true  },
+  { id: 21, employeeId: 8,  year: 2026, month: 5, baseSalary: 60000,  totalDays: 30, workedDays: 30, accrued: 60000,  advance: 60000,  transferred: true  },
+  { id: 22, employeeId: 9,  year: 2026, month: 5, baseSalary: 100000, totalDays: 30, workedDays: 29, accrued: 96667,  advance: 27000,  transferred: true  },
+  { id: 23, employeeId: 10, year: 2026, month: 5, baseSalary: 60000,  totalDays: 30, workedDays: 10, accrued: 20000,  advance: 20000,  transferred: true  },
+  { id: 24, employeeId: 11, year: 2026, month: 5, baseSalary: 60000,  totalDays: 30, workedDays: 20, accrued: 40000,  advance: 27000,  transferred: true  },
+  { id: 25, employeeId: 12, year: 2026, month: 5, baseSalary: 60000,  totalDays: 30, workedDays: 22, accrued: 44000,  advance: 27000,  transferred: true  },
+  // June 2026 (pending transfer)
+  { id: 26, employeeId: 1,  year: 2026, month: 6, baseSalary: 60000,  totalDays: 30, workedDays: 28, accrued: 56000,  advance: 8000,   transferred: false },
+  { id: 27, employeeId: 2,  year: 2026, month: 6, baseSalary: 105000, totalDays: 30, workedDays: 0,  accrued: 0,      advance: 0,      transferred: false },
+  { id: 28, employeeId: 3,  year: 2026, month: 6, baseSalary: 105000, totalDays: 30, workedDays: 21, accrued: 73500,  advance: 0,      transferred: false },
+  { id: 29, employeeId: 4,  year: 2026, month: 6, baseSalary: 75000,  totalDays: 30, workedDays: 26, accrued: 65000,  advance: 0,      transferred: false },
+  { id: 30, employeeId: 5,  year: 2026, month: 6, baseSalary: 75000,  totalDays: 30, workedDays: 21, accrued: 52500,  advance: 0,      transferred: false },
+  { id: 31, employeeId: 6,  year: 2026, month: 6, baseSalary: 150000, totalDays: 30, workedDays: 26, accrued: 130000, advance: 0,      transferred: false },
+  { id: 32, employeeId: 7,  year: 2026, month: 6, baseSalary: 100000, totalDays: 30, workedDays: 18, accrued: 60000,  advance: 0,      transferred: false },
+  { id: 33, employeeId: 8,  year: 2026, month: 6, baseSalary: 60000,  totalDays: 30, workedDays: 30, accrued: 60000,  advance: 2000,   transferred: false },
+  { id: 34, employeeId: 9,  year: 2026, month: 6, baseSalary: 100000, totalDays: 30, workedDays: 30, accrued: 100000, advance: 0,      transferred: false },
+  { id: 35, employeeId: 10, year: 2026, month: 6, baseSalary: 60000,  totalDays: 30, workedDays: 0,  accrued: 0,      advance: 0,      transferred: false },
+  { id: 36, employeeId: 11, year: 2026, month: 6, baseSalary: 60000,  totalDays: 30, workedDays: 11, accrued: 22000,  advance: 0,      transferred: false },
+  { id: 37, employeeId: 12, year: 2026, month: 6, baseSalary: 60000,  totalDays: 30, workedDays: 8,  accrued: 16000,  advance: 0,      transferred: false },
+];
+let nextHistoryId = 38;
+
 // ─── Attendance ───────────────────────────────────────────────────────────────
 
-const JUNE_WORK_DAYS = [1,2,3,4,5, 8,9,10,11,12, 15,16,17,18,19, 22,23,24,25,26, 29,30];
-const JUNE_ATTENDANCE_DAYS = {
-  1: JUNE_WORK_DAYS,
-  2: JUNE_WORK_DAYS.filter(d => d !== 15),
-  3: JUNE_WORK_DAYS.filter(d => d !== 10 && d !== 26),
-  4: JUNE_WORK_DAYS,
-  5: JUNE_WORK_DAYS,
-  6: JUNE_WORK_DAYS.filter(d => d > 8),
-  7: JUNE_WORK_DAYS.filter(d => d !== 3),
-};
+// Days worked in June per employee (from payroll records)
+const JUNE_DAYS_WORKED = { 1:28, 2:0, 3:21, 4:26, 5:21, 6:26, 7:18, 8:30, 9:30, 10:0, 11:11, 12:8 };
+// Active workers in July (emp 2,10 absent in June, continue absent)
+const JULY_WORKERS = [1,3,4,5,6,7,8,9,11,12];
+// Today (July 6) — these employees have entry time (on shift)
+const JULY_TODAY_ENTRY = [1,3,5];
 
 function buildAttendanceRecords() {
   const records = [];
   let id = 1;
-  for (const [empId, days] of Object.entries(JUNE_ATTENDANCE_DAYS)) {
-    for (const day of days) {
+  // June records — first N days for each employee based on payroll data
+  for (const [empIdStr, daysWorked] of Object.entries(JUNE_DAYS_WORKED)) {
+    const empId = Number(empIdStr);
+    for (let d = 1; d <= daysWorked; d++) {
       records.push({
         id: id++,
-        employeeId: Number(empId),
-        workDate: `2026-06-${String(day).padStart(2, '0')}T00:00:00.000Z`,
+        employeeId: empId,
+        workDate: `2026-06-${String(d).padStart(2,'0')}T00:00:00.000Z`,
         entryTime: '08:00',
-        exitTime: day % 3 === 0 ? '17:00' : null,
+        exitTime: d % 3 === 0 ? '17:00' : null,
         source: 'manual',
       });
     }
   }
-  for (const emp of EMPLOYEES.slice(0, 7)) {
+  // July 1-5 — all active workers were present
+  for (const empId of JULY_WORKERS) {
+    for (let d = 1; d <= 5; d++) {
+      records.push({
+        id: id++,
+        employeeId: empId,
+        workDate: `2026-07-${String(d).padStart(2,'0')}T00:00:00.000Z`,
+        entryTime: '08:00',
+        exitTime: '17:00',
+        source: 'camera',
+      });
+    }
+  }
+  // July 6 (today) — some employees have entry, others are absent (director can mark)
+  for (const empId of JULY_TODAY_ENTRY) {
     records.push({
       id: id++,
-      employeeId: emp.id,
-      workDate: '2026-07-01T00:00:00.000Z',
+      employeeId: empId,
+      workDate: '2026-07-06T00:00:00.000Z',
       entryTime: '08:00',
       exitTime: null,
-      source: 'camera',
+      source: 'manual',
     });
   }
   return records;
@@ -206,28 +267,47 @@ const CAMERA_STATS = { entries: 8, exits: 6, authorized: 12, denied: 2 };
 // ─── Salary calculations ──────────────────────────────────────────────────────
 
 function calcSalaries(year, month) {
-  const TOTAL_WORK_DAYS = month === 6 ? 22 : month === 7 ? 23 : 22;
+  const now = new Date();
+  const curY = now.getUTCFullYear();
+  const curM = now.getUTCMonth() + 1;
+  const isPast = year < curY || (year === curY && month < curM);
+  if (isPast) {
+    return EMPLOYEES.map(emp => {
+      const h = SALARY_HISTORY.find(x => x.employeeId === emp.id && x.year === year && x.month === month);
+      return { employeeId: emp.id, amount: h ? h.accrued : 0, daysWorked: h ? h.workedDays : 0, isFinal: true };
+    });
+  }
+  const daysInMon = new Date(year, month, 0).getDate();
   return EMPLOYEES.map(emp => {
     const worked = ATTENDANCE.filter(r => {
       const d = new Date(r.workDate);
       return r.employeeId === emp.id && d.getUTCFullYear() === year && (d.getUTCMonth() + 1) === month;
     }).length;
-    const amount = Math.round(Number(emp.baseSalary) * worked / TOTAL_WORK_DAYS);
-    return { employeeId: emp.id, amount, daysWorked: worked, isFinal: month < 7 };
+    const amount = Math.round(Number(emp.baseSalary) * worked / daysInMon);
+    return { employeeId: emp.id, amount, daysWorked: worked, isFinal: false };
   });
 }
 
 function calcYearlySalaries(year) {
   const byEmployee = {};
+  const now = new Date();
+  const curY = now.getUTCFullYear();
+  const curM = now.getUTCMonth() + 1;
   for (const emp of EMPLOYEES) {
     byEmployee[emp.id] = {};
     for (let m = 1; m <= 12; m++) {
-      const TOTAL_WORK_DAYS = 22;
-      const worked = ATTENDANCE.filter(r => {
-        const d = new Date(r.workDate);
-        return r.employeeId === emp.id && d.getUTCFullYear() === year && (d.getUTCMonth() + 1) === m;
-      }).length;
-      if (worked > 0) byEmployee[emp.id][m] = Math.round(Number(emp.baseSalary) * worked / TOTAL_WORK_DAYS);
+      const isPast = year < curY || (year === curY && m < curM);
+      if (isPast) {
+        const h = SALARY_HISTORY.find(x => x.employeeId === emp.id && x.year === year && x.month === m);
+        if (h && h.accrued > 0) byEmployee[emp.id][m] = h.accrued;
+      } else if (year === curY && m === curM) {
+        const daysInMon = new Date(year, m, 0).getDate();
+        const worked = ATTENDANCE.filter(r => {
+          const d = new Date(r.workDate);
+          return r.employeeId === emp.id && d.getUTCFullYear() === year && (d.getUTCMonth() + 1) === m;
+        }).length;
+        if (worked > 0) byEmployee[emp.id][m] = Math.round(Number(emp.baseSalary) * worked / daysInMon);
+      }
     }
   }
   return byEmployee;
@@ -653,6 +733,36 @@ const server = http.createServer(async (req, res) => {
   if (path === '/api/salaries/year' && method === 'GET') {
     const year = Number(query.year) || 2026;
     return send(res, 200, { byEmployee: calcYearlySalaries(year) });
+  }
+
+  if (path === '/api/salaries/history' && method === 'GET') {
+    const year = Number(query.year) || 2026;
+    return send(res, 200, { history: SALARY_HISTORY.filter(h => h.year === year) });
+  }
+
+  if (path === '/api/salaries/transfer' && method === 'POST') {
+    const body = await readBody(req);
+    const { employeeId, year, month, advance } = body;
+    let rec = SALARY_HISTORY.find(h => h.employeeId === employeeId && h.year === year && h.month === month);
+    if (rec) {
+      rec.transferred = true;
+      if (advance !== undefined) rec.advance = Number(advance);
+    } else {
+      const rows = calcSalaries(year, month);
+      const row = rows.find(r => r.employeeId === employeeId);
+      rec = {
+        id: nextHistoryId++,
+        employeeId, year, month,
+        baseSalary: Number(EMPLOYEES.find(e => e.id === employeeId)?.baseSalary || 0),
+        totalDays: new Date(year, month, 0).getDate(),
+        workedDays: row?.daysWorked || 0,
+        accrued: row?.amount || 0,
+        advance: Number(advance) || 0,
+        transferred: true,
+      };
+      SALARY_HISTORY.push(rec);
+    }
+    return send(res, 200, { record: rec });
   }
 
   // 404
