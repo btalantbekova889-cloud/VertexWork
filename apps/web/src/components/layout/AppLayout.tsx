@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import Sidebar from './Sidebar';
 import Header from './Header';
+import AccountingLayout from './AccountingLayout';
 
 interface AppLayoutProps {
   children: React.ReactNode;
@@ -24,13 +25,17 @@ export default function AppLayout({ children, title, subtitle }: AppLayoutProps)
     return (
       <div className="min-h-screen bg-gray-100 flex items-center justify-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="w-8 h-8 rounded bg-blue-600 flex items-center justify-center animate-pulse">
+          <div className="w-8 h-8 rounded animate-pulse flex items-center justify-center" style={{ background: '#1b3a6b' }}>
             <span className="text-white font-bold text-sm">V</span>
           </div>
           <p className="text-gray-500 text-sm">Загрузка...</p>
         </div>
       </div>
     );
+  }
+
+  if (user.role === 'accountant') {
+    return <AccountingLayout>{children}</AccountingLayout>;
   }
 
   return (

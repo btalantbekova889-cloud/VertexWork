@@ -48,7 +48,7 @@ export default function LoginPage() {
     setLoading(true);
     try {
       await login(loginValue, password);
-      router.push('/dashboard');
+      router.push(selectedRole === 'accountant' ? '/accounting/home' : '/dashboard');
     } catch (err) {
       setError(err instanceof ApiError ? err.message : 'Не удалось войти. Проверьте соединение с сервером.');
     } finally {
